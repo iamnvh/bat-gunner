@@ -1,0 +1,33 @@
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('app', () => ({
+  nodeEnv: process.env.NODE_ENV,
+  name: process.env.APP_NAME,
+  workingDirectory: process.env.PWD || process.cwd(),
+  frontendDomain: process.env.FRONTEND_DOMAIN,
+  backendDomain: process.env.BACKEND_DOMAIN,
+  port: process.env.APP_PORT || 3000,
+  apiPrefix: process.env.API_PREFIX,
+  fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || 'en',
+  headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',
+  redisHost: process.env.REDIS_HOST,
+  redisPort: Number(process.env.REDIS_PORT),
+  redisPassword: process.env.REDIS_HOST_PASSWORD,
+  rpcEndpointMainnet: process.env.RPC_ENDPOINT_MAINNET,
+  mnemonicMainnet: process.env.CUPIEE_MNEMONIC_MAINNET,
+  cw20AddressMainnet: process.env.CW20_ADDRESS_MAINNET,
+  rpcEndpoint: process.env.RPC_ENDPOINT,
+  mnemonic: process.env.CUPIEE_MNEMONIC,
+  cw20Address: process.env.CW20_ADDRESS,
+  lcdEndpoint: process.env.LCD_ENDPOINT,
+  lcdEndpointMainnet: process.env.LCD_ENDPOINT_MAINNET,
+  rewardNumber: Number(process.env.MATCHING_REWARD_NUMBER),
+  appleSharedSecret: process.env.APPLE_SHARED_SECRET,
+  nftOw1155ContractAddress: process.env.NFT_OW1155_CONTRACT_ADDRESS,
+  nftOw1155RoyaltyMarketplaceContractAddress:
+    process.env.NFT_1155_ROYALTY_MARKETPLACE_CONTRACT_ADDRESS,
+  endpointMatching: process.env.ENDPOINT_MATCHING,
+  endpointMatchingCheckSwipe: process.env.ENDPOINT_MATCHING_CHECK_SWIPE,
+  maxLike: process.env.MAXIMUM_LIKE,
+  googleCloudConsoleKey: process.env.GOOGLE_CLOUD_CONSOLE_KEY,
+}));
