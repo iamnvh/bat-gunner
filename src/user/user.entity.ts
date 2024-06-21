@@ -2,7 +2,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   UpdateDateColumn,
   Index,
 } from 'typeorm';
@@ -14,24 +13,22 @@ export class UserEntity {
   id: string;
 
   @Column({ nullable: false })
-  telegramId: number;
+  telegramId: string;
 
   @Column({ nullable: false })
   telegramUsername: string;
 
-  @Column({ nullable: true })
-  @CreateDateColumn({ type: 'timestamp' })
-  timeEnd: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  timeStartClaim: Date;
 
-  @Column({ nullable: true })
-  @CreateDateColumn({ type: 'timestamp' })
-  timeStart: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  timeLastClaim: Date;
 
-  @Column({ nullable: false, default: 0 })
-  point: number;
+  @Column({ nullable: true, default: 0 })
+  totalPoints: number;
 
-  @Column({ nullable: false, default: false })
-  statusClaim: boolean;
+  @Column({ nullable: true, default: 0 })
+  playPasses: number;
 
   @UpdateDateColumn({
     type: 'timestamp',

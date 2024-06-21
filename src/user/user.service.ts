@@ -16,4 +16,12 @@ export class UserService {
       where: fields,
     });
   }
+
+  create(user: UserEntity): Promise<UserEntity> {
+    return this.userRepository.save(user);
+  }
+
+  softDelete(id: string) {
+    return this.userRepository.softDelete(id);
+  }
 }

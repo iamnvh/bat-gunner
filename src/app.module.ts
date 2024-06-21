@@ -8,6 +8,7 @@ import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { UserModule } from './user/user.module';
+import { ReferralModule } from './referral/referral.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
+    ReferralModule,
   ],
 })
 export class AppModule {}

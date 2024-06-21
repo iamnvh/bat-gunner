@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
-import { IsExist } from 'src/utils/validators/is-exists.validator';
-import { IsNotExist } from 'src/utils/validators/is-not-exists.validator';
+import { ReferralModule } from 'src/referral/referral.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, ReferralModule],
   controllers: [AuthController],
-  providers: [IsExist, IsNotExist, AuthService],
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}
