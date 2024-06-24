@@ -13,5 +13,5 @@ export class RegisterDto extends UserEntity {
 
   @ApiProperty()
   @IsString()
-  referenceTelegramId: string;
+  referrerTelegramId: string;
 }

@@ -28,8 +28,14 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  softDelete(id: string) {
-    return this.userRepository.softDelete(id);
+  async findUser(params: { telegramId?: string; telegramUsername?: string }) {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.telegramId = :telegramId', { telegramId: params.telegramId })
+      .orWhere('user.telegramUsername = :telegramUsername', {
+        telegramUsername: params.telegramUsername,
+      })
+      .getOne();
   }
 
   async updatePoint(userId: string, point: number) {
@@ -38,7 +44,7 @@ export class UserService {
       .update(UserEntity)
       .set({
         timeLastClaim: new Date(),
-        totalPoints: point,
+        totalPoints: () => `totalPoints + ${point}`,
       })
       .where('id = :userId', { userId })
       .execute();
@@ -55,31 +61,49 @@ export class UserService {
   }
 
   async claim(userId: string) {
-    const user = await this.userRepository.findOne({
-      where: {
-        id: userId,
-      },
-    });
+    const user = await this.getUserById(userId);
+    this.checkClaimEligibility(user);
+    const userReferrer = await this.referralService.getUserReferrer(user.id);
+
+    if (!userReferrer) {
+      throw new UnauthorizedException();
+    }
+
+    const userUpdatePromise = this.updatePoint(
+      userId,
+      PointClaim.CLAIM_LEVEL_1,
+    );
+    const referrerUpdatePromise = this.updatePoint(
+      userReferrer,
+      (PointClaim.CLAIM_LEVEL_1 * 10) / 100,
+    );
+    await Promise.all([userUpdatePromise, referrerUpdatePromise]);
+    return userUpdatePromise;
+  }
+
+  async getUserById(userId: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    if (user?.timeLastClaim == null) {
-      return this.updatePoint(userId, PointClaim.CLAIM_LEVEL_1);
+    return user;
+  }
+
+  checkClaimEligibility(user: UserEntity) {
+    if (user.timeLastClaim == null) {
+      return;
     }
 
     const now = new Date();
     const lastClaimTime = new Date(user.timeLastClaim);
 
-    const isClaimAvailable =
+    const claimAvailable =
       now.getTime() - lastClaimTime.getTime() < HOURS_SPEND_CLAIM;
 
-    if (isClaimAvailable) {
-      throw new BadRequestException(`not_enough_time_to_claim`);
+    if (claimAvailable) {
+      throw new BadRequestException('not_enough_time_to_claim');
     }
-
-    const userReferrer = await this.referralService.getUserReferrer(user.id);
-    console.log(userReferrer);
   }
 }

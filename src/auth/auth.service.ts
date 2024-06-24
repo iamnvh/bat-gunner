@@ -20,9 +20,9 @@ export class AuthService {
 
   async register(dto: RegisterDto): Promise<any> {
     const [user, userReferrer] = await Promise.all([
-      this.userService.findOne({ telegramId: dto.telegramId }),
+      this.userService.findUser(dto),
       this.userService.findOne({
-        telegramId: dto.referenceTelegramId,
+        telegramId: dto.referrerTelegramId,
       }),
     ]);
 
