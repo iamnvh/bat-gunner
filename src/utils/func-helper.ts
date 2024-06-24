@@ -1,7 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
-import * as AES from 'crypto-js/aes';
-import * as encUTF8 from 'crypto-js/enc-utf8';
 
 const StatusCode = {
   SUCCESS: 1,
@@ -53,35 +51,4 @@ export const formatNotificationPayload = (obj) => {
     }
   }
   return obj;
-};
-
-export const decrypt = (encryptedMessage) => {
-  if (!encryptedMessage || !process.env.MESSAGE_SECRET_KEY) {
-    return null;
-  }
-  const bytes = AES.decrypt(encryptedMessage, process.env.MESSAGE_SECRET_KEY);
-  return bytes.toString(encUTF8);
-};
-
-export const getCompletedProfile = (obj: any) => {
-  const arrField = [
-    'photos',
-    'aboutMe',
-    'livingIn',
-    'status',
-    'starSign',
-    'sexuality',
-    'drinking',
-    'smoking',
-    'pets',
-    'languages',
-    'hobbies',
-    'quotes',
-  ];
-  const valueListCheck = arrField.filter(
-    (field) =>
-      obj[field] !== null ||
-      (Array.isArray(obj[field]) && !!obj[field]?.length),
-  );
-  return Math.round((valueListCheck.length / arrField.length) * 100);
 };

@@ -35,9 +35,9 @@ export class AuthController {
 
   @Get('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto, @Res() response: Response) {
+  async login(@Body() loginDto: LoginDto, @Res() response: Response) {
     try {
-      const data = await this.authService.login(dto.telegramId);
+      const data = await this.authService.login(loginDto);
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ data: error, response });

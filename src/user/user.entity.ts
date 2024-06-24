@@ -19,9 +19,6 @@ export class UserEntity {
   telegramUsername: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  timeStartClaim: Date;
-
-  @Column({ type: 'timestamp', nullable: true })
   timeLastClaim: Date;
 
   @Column({ nullable: true, default: 0 })

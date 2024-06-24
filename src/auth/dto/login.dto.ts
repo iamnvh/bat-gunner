@@ -5,4 +5,8 @@ export class LoginDto {
   @ApiProperty()
   @IsString()
   telegramId: string;
+
+  @ApiProperty()
+  @IsString()
+  telegramUsername: string;
 }

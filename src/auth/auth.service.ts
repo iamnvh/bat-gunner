@@ -1,14 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { RegisterDto } from './dto/register.dto';
 import { ReferralService } from 'src/referral/referral.service';
 import { ReferralDto } from 'src/referral/dto/referral.dto';
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly referralService: ReferralService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async register(dto: RegisterDto): Promise<any> {
@@ -42,10 +49,34 @@ export class AuthService {
     } as ReferralDto);
   }
 
-  async login(telegramId: string) {
-    const user = await this.userService.findOne({ telegramId: telegramId });
+  async login(loginDto: LoginDto) {
+    const user = await this.userService.findOne({
+      telegramId: loginDto.telegramId,
+      telegramUsername: loginDto.telegramUsername,
+    });
+
     if (!user) {
-      throw new NotFoundException(`user_not_found`);
+      throw new UnauthorizedException(`user_not_found`);
     }
+
+    const token = this.jwtService.sign({
+      telegramId: loginDto.telegramId,
+      telegramUsername: loginDto.telegramUsername,
+    });
+
+    return { token };
+  }
+
+  async validateUser(telegramId: string, telegramUsername: string) {
+    const user = await this.userService.findOne({
+      telegramId: telegramId,
+      telegramUsername: telegramUsername,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
   }
 }
