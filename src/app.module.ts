@@ -9,6 +9,7 @@ import databaseConfig from './config/database.config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { UserModule } from './user/user.module';
 import { ReferralModule } from './referral/referral.module';
+import { ClaimModule } from './claim/claim.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ReferralModule } from './referral/referral.module';
     AuthModule,
     UserModule,
     ReferralModule,
+    ClaimModule,
   ],
 })
 export class AppModule {}

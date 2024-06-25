@@ -18,15 +18,6 @@ export class UserEntity {
   @Column({ nullable: false })
   telegramUsername: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  timeLastClaim: Date;
-
-  @Column({ nullable: true, default: 0 })
-  totalPoints: number;
-
-  @Column({ nullable: true, default: 0 })
-  playPasses: number;
-
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP()',

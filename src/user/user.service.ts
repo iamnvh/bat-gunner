@@ -1,14 +1,11 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { EntityCondition } from 'src/utils/types/entity-condition.type';
-import { PointClaim, HOURS_SPEND_CLAIM } from 'src/utils/constants';
+import { CLAIM_TYPE, LEVEL_CLAIM, POINT_REWARD } from 'src/utils/constants';
 import { ReferralService } from 'src/referral/referral.service';
+import { ClaimService } from 'src/claim/claim.service';
 
 @Injectable()
 export class UserService {
@@ -16,6 +13,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private readonly referralService: ReferralService,
+    private readonly claimService: ClaimService,
   ) {}
 
   findOne(fields: EntityCondition<UserEntity>) {
@@ -28,6 +26,36 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  getProfile(params: { telegramId: string; telegramUsername: string }) {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoin('claim', 'claim', 'claim.userId = user.id')
+      .where('user.telegramId = :telegramId', { telegramId: params.telegramId })
+      .andWhere('user.telegramUsername = :telegramUsername', {
+        telegramUsername: params.telegramUsername,
+      })
+      .select([
+        'user.telegramId as telegramId',
+        'user.telegramUsername as telegramUsername',
+        'SUM(claim.point) as totalPoints',
+        'MAX(claim.updatedAt) as lastClaimed',
+      ])
+      .groupBy('user.id')
+      .getRawOne();
+  }
+
+  async getUserReferrer(userId: string) {
+    const referrer = await this.referralService.findOne({
+      referredUserId: userId,
+    });
+
+    if (!referrer) {
+      throw new UnauthorizedException();
+    }
+
+    return this.findOne({ id: referrer.referrerUserId });
+  }
+
   async findUser(params: { telegramId?: string; telegramUsername?: string }) {
     return this.userRepository
       .createQueryBuilder('user')
@@ -38,72 +66,44 @@ export class UserService {
       .getOne();
   }
 
-  async updatePoint(userId: string, point: number) {
-    await this.userRepository
-      .createQueryBuilder('user')
-      .update(UserEntity)
-      .set({
-        timeLastClaim: new Date(),
-        totalPoints: () => `totalPoints + ${point}`,
-      })
-      .where('id = :userId', { userId })
-      .execute();
-
-    return this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id = :userId', { userId })
-      .select([
-        'user.telegramUsername as displayName',
-        'user.totalPoints as totalPoints',
-        'user.timeLastClaim as timeLastClaim',
-      ])
-      .getRawOne();
-  }
-
   async claim(userId: string) {
-    const user = await this.getUserById(userId);
-    this.checkClaimEligibility(user);
-    const userReferrer = await this.referralService.getUserReferrer(user.id);
+    const [user, userDirectReferral] = await Promise.all([
+      this.userRepository.findOne({ where: { id: userId } }),
+      this.getUserReferrer(userId),
+    ]);
 
-    if (!userReferrer) {
+    if (!user || !userDirectReferral) {
       throw new UnauthorizedException();
     }
 
-    const userUpdatePromise = this.updatePoint(
-      userId,
-      PointClaim.CLAIM_LEVEL_1,
+    const userIndirectReferral = await this.getUserReferrer(
+      userDirectReferral?.id,
     );
-    const referrerUpdatePromise = this.updatePoint(
-      userReferrer,
-      (PointClaim.CLAIM_LEVEL_1 * 10) / 100,
-    );
-    await Promise.all([userUpdatePromise, referrerUpdatePromise]);
-    return userUpdatePromise;
-  }
 
-  async getUserById(userId: string): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (!user) {
+    if (!userIndirectReferral) {
       throw new UnauthorizedException();
     }
 
-    return user;
-  }
+    const claimUser = this.claimService.create({
+      typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
+      userId: user.id,
+      point: POINT_REWARD * LEVEL_CLAIM.LEVEL_ONE,
+    });
 
-  checkClaimEligibility(user: UserEntity) {
-    if (user.timeLastClaim == null) {
-      return;
-    }
+    const claimUserDirect = this.claimService.create({
+      typeClaim: CLAIM_TYPE.CLAIM_FOR_DIRECT_REF,
+      userId: userDirectReferral.id,
+      point: POINT_REWARD * LEVEL_CLAIM.LEVEL_TWO,
+    });
 
-    const now = new Date();
-    const lastClaimTime = new Date(user.timeLastClaim);
+    const claimUserInDirect = this.claimService.create({
+      typeClaim: CLAIM_TYPE.CLAIM_FOR_IN_DIRECT_REF,
+      userId: userIndirectReferral.id,
+      point: POINT_REWARD * LEVEL_CLAIM.LEVEL_THREE,
+    });
 
-    const claimAvailable =
-      now.getTime() - lastClaimTime.getTime() < HOURS_SPEND_CLAIM;
+    await Promise.all([claimUser, claimUserDirect, claimUserInDirect]);
 
-    if (claimAvailable) {
-      throw new BadRequestException('not_enough_time_to_claim');
-    }
+    return claimUser;
   }
 }

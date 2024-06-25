@@ -1,15 +1,22 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ReferralEntity } from './referral.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LIMIT_REFERRAL } from 'src/utils/constants';
+import { EntityCondition } from 'src/utils/types/entity-condition.type';
 
 @Injectable()
 export class ReferralService {
   constructor(
     @InjectRepository(ReferralEntity)
-    private referralRepository: Repository<ReferralEntity>,
+    private readonly referralRepository: Repository<ReferralEntity>,
   ) {}
+
+  findOne(fields: EntityCondition<ReferralEntity>) {
+    return this.referralRepository.findOne({
+      where: fields,
+    });
+  }
 
   async create(referral: ReferralEntity): Promise<ReferralEntity> {
     return this.referralRepository.save(referral);
@@ -27,13 +34,15 @@ export class ReferralService {
     const friends = await this.referralRepository
       .createQueryBuilder('ref')
       .leftJoin('user', 'user', 'user.id = ref.referredUserId')
+      .leftJoin('claim', 'claim', 'claim.userId = user.id')
       .where('ref.referrerUserId = :referrerUserId', {
         referrerUserId: userId,
       })
       .select([
         'user.telegramUsername as displayName',
-        'user.totalPoints as totalPoints',
+        'SUM(claim.point) as totalPoints',
       ])
+      .groupBy('user.telegramUsername')
       .getRawMany();
 
     const totalFriends = await this.referralRepository
@@ -44,17 +53,5 @@ export class ReferralService {
       .getCount();
 
     return { friends, totalFriends };
-  }
-
-  async getUserReferrer(userId: string) {
-    const user = await this.referralRepository.findOne({
-      where: { referredUserId: userId },
-    });
-
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-
-    return user?.referrerUserId;
   }
 }

@@ -4,13 +4,20 @@ import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { ReferralService } from 'src/referral/referral.service';
-import { ReferralEntity } from 'src/referral/referral.entity';
+import { ClaimService } from 'src/claim/claim.service';
+import { ClaimModule } from 'src/claim/claim.module';
+import { ClaimEntity } from 'src/claim/claim.entity';
+import { ReferralModule } from 'src/referral/referral.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, ReferralEntity]), JwtModule],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity, ClaimEntity]),
+    JwtModule,
+    ClaimModule,
+    ReferralModule,
+  ],
   controllers: [UserController],
-  providers: [UserService, ReferralService],
+  providers: [UserService, ClaimService],
   exports: [UserService],
 })
 export class UserModule {}

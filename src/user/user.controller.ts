@@ -29,7 +29,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async profile(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
     try {
-      const data = await this.userService.findOne({
+      const data = await this.userService.getProfile({
         telegramId: auth.user.telegramId,
         telegramUsername: auth.user.telegramUsername,
       });
