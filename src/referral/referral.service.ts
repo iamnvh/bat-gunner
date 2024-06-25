@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ReferralEntity } from './referral.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -40,8 +40,8 @@ export class ReferralService {
           referrerUserId: userId,
         })
         .select([
-          'user.telegramUsername as displayName',
-          'SUM(claim.point) as totalPoints',
+          'user.telegramUsername as "userName"',
+          'SUM(claim.point) as "totalPoints"',
         ])
         .groupBy('user.telegramUsername')
         .getRawMany(),
@@ -54,5 +54,22 @@ export class ReferralService {
     ]);
 
     return { friends, totalFriends };
+  }
+
+  async getUserReferrers(userId: string) {
+    return this.referralRepository
+      .createQueryBuilder('referral')
+      .leftJoinAndMapOne(
+        'referral.indirectReferral',
+        ReferralEntity,
+        'indirectReferral',
+        'indirectReferral.referredUserId = referral.referrerUserId',
+      )
+      .where('referral.referredUserId = :userId', { userId })
+      .select([
+        'referral.referrerUserId as "userRedirect"',
+        'indirectReferral.referrerUserId as "userInRedirect"',
+      ])
+      .getRawOne();
   }
 }

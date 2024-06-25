@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ReferralModule } from 'src/referral/referral.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule, ReferralModule],
+  imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
