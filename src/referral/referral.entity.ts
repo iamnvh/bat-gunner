@@ -6,6 +6,7 @@ import {
   JoinColumn,
   UpdateDateColumn,
   Column,
+  Index,
 } from 'typeorm';
 
 @Entity({ name: 'referral' })
@@ -13,6 +14,7 @@ export class ReferralEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @Column({ nullable: true })
   referrerUserId: string;
 

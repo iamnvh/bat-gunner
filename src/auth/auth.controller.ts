@@ -29,7 +29,7 @@ export class AuthController {
       const data = await this.authService.register(dto);
       ResponseAPI.Success({ data, response });
     } catch (error) {
-      ResponseAPI.Fail({ data: error, response });
+      ResponseAPI.Fail({ message: error.message, response });
     }
   }
 
@@ -40,7 +40,7 @@ export class AuthController {
       const data = await this.authService.login(loginDto);
       ResponseAPI.Success({ data, response });
     } catch (error) {
-      ResponseAPI.Fail({ data: error, response });
+      ResponseAPI.Fail({ message: error.message, response });
     }
   }
 }

@@ -6,7 +6,6 @@ import {
   Req,
   Res,
   UseGuards,
-  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -35,7 +34,7 @@ export class UserController {
       });
       ResponseAPI.Success({ data, response });
     } catch (error) {
-      ResponseAPI.Fail({ data: error, response });
+      ResponseAPI.Fail({ message: error.message, response });
     }
   }
 }

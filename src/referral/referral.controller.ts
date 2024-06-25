@@ -31,7 +31,7 @@ export class ReferralController {
       const data = await this.referralService.friends(auth.user.id);
       ResponseAPI.Success({ data, response });
     } catch (error) {
-      ResponseAPI.Fail({ data: error, response });
+      ResponseAPI.Fail({ message: error.message, response });
     }
   }
 }
