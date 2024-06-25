@@ -3,9 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { EntityCondition } from 'src/utils/types/entity-condition.type';
-import { CLAIM_TYPE, LEVEL_CLAIM, POINT_REWARD } from 'src/utils/constants';
 import { ReferralService } from 'src/referral/referral.service';
-import { ClaimService } from 'src/claim/claim.service';
 
 @Injectable()
 export class UserService {
@@ -13,7 +11,6 @@ export class UserService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private readonly referralService: ReferralService,
-    private readonly claimService: ClaimService,
   ) {}
 
   findOne(fields: EntityCondition<UserEntity>) {
@@ -64,46 +61,5 @@ export class UserService {
         telegramUsername: params.telegramUsername,
       })
       .getOne();
-  }
-
-  async claim(userId: string) {
-    const [user, userDirectReferral] = await Promise.all([
-      this.userRepository.findOne({ where: { id: userId } }),
-      this.getUserReferrer(userId),
-    ]);
-
-    if (!user || !userDirectReferral) {
-      throw new UnauthorizedException();
-    }
-
-    const userIndirectReferral = await this.getUserReferrer(
-      userDirectReferral?.id,
-    );
-
-    if (!userIndirectReferral) {
-      throw new UnauthorizedException();
-    }
-
-    const claimUser = this.claimService.create({
-      typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
-      userId: user.id,
-      point: POINT_REWARD * LEVEL_CLAIM.LEVEL_ONE,
-    });
-
-    const claimUserDirect = this.claimService.create({
-      typeClaim: CLAIM_TYPE.CLAIM_FOR_DIRECT_REF,
-      userId: userDirectReferral.id,
-      point: POINT_REWARD * LEVEL_CLAIM.LEVEL_TWO,
-    });
-
-    const claimUserInDirect = this.claimService.create({
-      typeClaim: CLAIM_TYPE.CLAIM_FOR_IN_DIRECT_REF,
-      userId: userIndirectReferral.id,
-      point: POINT_REWARD * LEVEL_CLAIM.LEVEL_THREE,
-    });
-
-    await Promise.all([claimUser, claimUserDirect, claimUserInDirect]);
-
-    return claimUser;
   }
 }

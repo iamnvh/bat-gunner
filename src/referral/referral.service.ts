@@ -31,26 +31,27 @@ export class ReferralService {
   }
 
   async friends(userId: string) {
-    const friends = await this.referralRepository
-      .createQueryBuilder('ref')
-      .leftJoin('user', 'user', 'user.id = ref.referredUserId')
-      .leftJoin('claim', 'claim', 'claim.userId = user.id')
-      .where('ref.referrerUserId = :referrerUserId', {
-        referrerUserId: userId,
-      })
-      .select([
-        'user.telegramUsername as displayName',
-        'SUM(claim.point) as totalPoints',
-      ])
-      .groupBy('user.telegramUsername')
-      .getRawMany();
-
-    const totalFriends = await this.referralRepository
-      .createQueryBuilder('ref')
-      .where('ref.referrerUserId = :referrerUserId', {
-        referrerUserId: userId,
-      })
-      .getCount();
+    const [friends, totalFriends] = await Promise.all([
+      this.referralRepository
+        .createQueryBuilder('ref')
+        .leftJoin('user', 'user', 'user.id = ref.referredUserId')
+        .leftJoin('claim', 'claim', 'claim.userId = user.id')
+        .where('ref.referrerUserId = :referrerUserId', {
+          referrerUserId: userId,
+        })
+        .select([
+          'user.telegramUsername as displayName',
+          'SUM(claim.point) as totalPoints',
+        ])
+        .groupBy('user.telegramUsername')
+        .getRawMany(),
+      this.referralRepository
+        .createQueryBuilder('ref')
+        .where('ref.referrerUserId = :referrerUserId', {
+          referrerUserId: userId,
+        })
+        .getCount(),
+    ]);
 
     return { friends, totalFriends };
   }
