@@ -6,7 +6,6 @@ import { MissionEntity } from './mission.entity';
 import { readFileSync } from 'fs';
 import { CLAIM_TYPE, MISSION_STATUS } from 'src/utils/constants';
 import { ClaimService } from 'src/claim/claim.service';
-import { ClaimEntity } from 'src/claim/claim.entity';
 
 const bufferData = readFileSync(
   process.cwd() + '/src/mission/data/mission.json',
@@ -73,11 +72,12 @@ export class MissionService {
       if (!missionById) {
         throw new BadGatewayException('not_found_mission');
       }
+
       await this.claimService.create({
         typeClaim: CLAIM_TYPE.CLAIM_FOR_MISSION,
         userId: params.userId,
         point: missionById.reward,
-      } as ClaimEntity);
+      });
     }
   }
 }

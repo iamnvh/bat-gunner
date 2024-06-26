@@ -11,6 +11,8 @@ import { UserModule } from './user/user.module';
 import { ReferralModule } from './referral/referral.module';
 import { ClaimModule } from './claim/claim.module';
 import { MissionModule } from './mission/mission.module';
+import { GameModule } from './game/game.module';
+import { GunModule } from './gun/gun.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { MissionModule } from './mission/mission.module';
     ReferralModule,
     ClaimModule,
     MissionModule,
+    GameModule,
+    GunModule,
   ],
 })
 export class AppModule {}

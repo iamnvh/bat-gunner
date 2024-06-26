@@ -31,13 +31,13 @@ export class AuthService {
     if (!userReferrer) {
       throw new NotFoundException(`user_referral_not_found`);
     }
-    const countLimit = await this.referralService.checkLimitReferral(
-      userReferrer.id,
-    );
+    // const countLimit = await this.referralService.checkLimitReferral(
+    //   userReferrer.id,
+    // );
 
-    if (!countLimit) {
-      throw new NotFoundException(`user_limited_referral`);
-    }
+    // if (!countLimit) {
+    //   throw new NotFoundException(`user_limited_referral`);
+    // }
 
     if (user) {
       throw new NotFoundException(`user_already_exists`);

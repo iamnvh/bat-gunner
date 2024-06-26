@@ -32,6 +32,7 @@ export class UserService {
       .select([
         'user.telegramId as "telegramId"',
         'user.telegramUsername as "telegramUsername"',
+        'user.tickets as tickets',
         'SUM(claim.point) as "totalPoints"',
         'MAX(claim.updatedAt) as "lastClaimed"',
       ])
@@ -47,5 +48,16 @@ export class UserService {
         telegramUsername: params.telegramUsername,
       })
       .getOne();
+  }
+
+  async handleMinusTicket(params: { userId: string; tickets: number }) {
+    return this.userRepository
+      .createQueryBuilder()
+      .update(UserEntity)
+      .set({
+        tickets: params.tickets,
+      })
+      .where('id = :userId', { userId: params.userId })
+      .execute();
   }
 }

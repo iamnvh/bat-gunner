@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -14,29 +13,16 @@ import { LocalAuthGuard } from 'src/auth/guards/local.guard';
 import { IAuthorizedRequest } from 'src/utils/types/authorized-request.interface';
 import { ResponseAPI } from 'src/utils/func-helper';
 import { Response } from 'express';
-import { MissionService } from './mission.service';
-import { MissionDto } from './dto/mission.dto';
+import { GameService } from './game.service';
+import { GameCreateDto } from './dto/game-create.dto';
 
-@ApiTags('Mission')
+@ApiTags('Game')
 @Controller({
-  path: 'mission',
+  path: 'game',
   version: '1',
 })
-export class MissionController {
-  constructor(private readonly missionService: MissionService) {}
-
-  @Get('')
-  @ApiBearerAuth()
-  @UseGuards(LocalAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async getMission(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
-    try {
-      const data = await this.missionService.getMissionsByUserId(auth.user.id);
-      ResponseAPI.Success({ data, response });
-    } catch (error) {
-      ResponseAPI.Fail({ message: error.message, response });
-    }
-  }
+export class GameController {
+  constructor(private readonly gameService: GameService) {}
 
   @Post('claim')
   @ApiBearerAuth()
@@ -44,13 +30,13 @@ export class MissionController {
   @HttpCode(HttpStatus.OK)
   async claimMission(
     @Req() auth: IAuthorizedRequest,
-    @Body() missionDto: MissionDto,
+    @Body() gameDto: GameCreateDto,
     @Res() response: Response,
   ) {
     try {
-      const data = await this.missionService.update({
-        missionId: missionDto.missionId,
+      const data = await this.gameService.update({
         userId: auth.user.id,
+        reward: gameDto.reward,
       });
       ResponseAPI.Success({ data, response });
     } catch (error) {

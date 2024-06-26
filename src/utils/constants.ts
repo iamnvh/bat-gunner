@@ -9,6 +9,7 @@ export enum CLAIM_TYPE {
   CLAIM_FOR_DIRECT_REF = 'claim_for_direct_ref',
   CLAIM_FOR_IN_DIRECT_REF = 'claim_for_in_direct_ref',
   CLAIM_FOR_MISSION = 'claim_for_mission',
+  CLAIM_FOR_GAME = 'claim_for_game',
 }
 
 export enum LEVEL_CLAIM {
@@ -25,4 +26,11 @@ export enum MISSION_STATUS {
 export enum MISSION_TYPE {
   SOCIAL = 'social',
   TARGET = 'target',
+}
+
+export enum GUN_TYPE {
+  GUN_BLACK = 1,
+  GUN_RED = 2,
+  GUN_GREEN = 3,
+  GUN_BLUE = 4,
 }

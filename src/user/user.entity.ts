@@ -20,6 +20,9 @@ export class UserEntity {
   @Column({ nullable: false })
   telegramUsername: string;
 
+  @Column({ nullable: false, default: 5 })
+  tickets: number;
+
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP()',

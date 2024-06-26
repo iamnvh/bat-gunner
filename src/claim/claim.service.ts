@@ -14,6 +14,7 @@ import {
   POINT_REWARD,
 } from 'src/utils/constants';
 import { ReferralService } from 'src/referral/referral.service';
+import { ClaimDto } from './dto/claim.dto';
 
 @Injectable()
 export class ClaimService {
@@ -24,7 +25,7 @@ export class ClaimService {
     private readonly referralService: ReferralService,
   ) {}
 
-  async create(claim: ClaimEntity): Promise<ClaimEntity> {
+  async create(claim: ClaimDto): Promise<ClaimEntity> {
     return this.claimRepository.save(claim);
   }
 
@@ -64,7 +65,7 @@ export class ClaimService {
     const claimPromises: Promise<any>[] = [];
 
     claimPromises.push(
-      this.claimRepository.save({
+      this.create({
         typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
         userId: user.id,
         point: POINT_REWARD * LEVEL_CLAIM.LEVEL_ONE,
@@ -73,7 +74,7 @@ export class ClaimService {
 
     if (usersReferral?.userRedirect) {
       claimPromises.push(
-        this.claimRepository.save({
+        this.create({
           typeClaim: CLAIM_TYPE.CLAIM_FOR_DIRECT_REF,
           userId: usersReferral.userRedirect,
           point: POINT_REWARD * LEVEL_CLAIM.LEVEL_TWO,
@@ -83,7 +84,7 @@ export class ClaimService {
 
     if (usersReferral?.userInRedirect) {
       claimPromises.push(
-        this.claimRepository.save({
+        this.create({
           typeClaim: CLAIM_TYPE.CLAIM_FOR_IN_DIRECT_REF,
           userId: usersReferral.userInRedirect,
           point: POINT_REWARD * LEVEL_CLAIM.LEVEL_THREE,
