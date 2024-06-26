@@ -24,7 +24,11 @@ export class ClaimService {
     private readonly referralService: ReferralService,
   ) {}
 
-  async isClaimAvaible(userId: string) {
+  async create(claim: ClaimEntity): Promise<ClaimEntity> {
+    return this.claimRepository.save(claim);
+  }
+
+  async isClaimAvailable(userId: string): Promise<boolean> {
     const latestClaim = await this.claimRepository
       .createQueryBuilder('claim')
       .where('claim.userId = :userId', { userId })
@@ -35,11 +39,10 @@ export class ClaimService {
       return true;
     }
 
-    return (
-      new Date().getTime() -
-        (latestClaim?.updatedAt.getTime() + 7 * 60 * 60 * 1000) >
-      HOURS_SPEND_CLAIM
-    );
+    const now = new Date().getTime();
+    const lastUpdated = latestClaim.updatedAt.getTime();
+
+    return now - lastUpdated > HOURS_SPEND_CLAIM;
   }
 
   async claim(userId: string) {
@@ -52,7 +55,7 @@ export class ClaimService {
       throw new UnauthorizedException();
     }
 
-    const isClaim = await this.isClaimAvaible(user.id);
+    const isClaim = await this.isClaimAvailable(user.id);
 
     if (!isClaim) {
       throw new BadRequestException('not_enough_time_to_claim');

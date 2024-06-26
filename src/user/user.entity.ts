@@ -4,9 +4,11 @@ import {
   Column,
   UpdateDateColumn,
   Index,
+  Unique,
 } from 'typeorm';
 
 @Entity({ name: 'user' })
+@Unique('user_unique', ['telegramId', 'telegramUsername'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   @Index()

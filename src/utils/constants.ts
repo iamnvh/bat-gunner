@@ -8,6 +8,7 @@ export enum CLAIM_TYPE {
   CLAIM_FOR_ME = 'claim_for_me',
   CLAIM_FOR_DIRECT_REF = 'claim_for_direct_ref',
   CLAIM_FOR_IN_DIRECT_REF = 'claim_for_in_direct_ref',
+  CLAIM_FOR_MISSION = 'claim_for_mission',
 }
 
 export enum LEVEL_CLAIM {

@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Follow Twitter",
+    "reward": 80,
+    "type": "social"
+  },
+  {
+    "title": "Follow Telegram",
+    "reward": 100,
+    "type": "social"
+  }
+]
