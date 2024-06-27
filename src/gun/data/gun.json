@@ -1,0 +1,22 @@
+[
+  {
+    "title": "GUN BLACK",
+    "gunType": 1,
+    "price": 0
+  },
+  {
+    "title": "GUN RED",
+    "gunType": 2,
+    "price": 0.2
+  },
+  {
+    "title": "GUN GREEN",
+    "gunType": 3,
+    "price": 0.4
+  },
+  {
+    "title": "GUN BLUE",
+    "gunType": 4,
+    "price": 0.6
+  }
+]

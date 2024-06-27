@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { MissionModule } from 'src/mission/mission.module';
+import { GunModule } from 'src/gun/gun.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MissionModule } from 'src/mission/mission.module';
     UserModule,
     ReferralModule,
     MissionModule,
+    GunModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

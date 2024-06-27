@@ -18,6 +18,15 @@ export class GunService {
     });
   }
 
+  async initGun(userId: string) {
+    return this.gunRepository.save({
+      userId: userId,
+      title: 'GUN BLACK',
+      gunType: 1,
+      price: 0,
+    });
+  }
+
   async update(params: { userId: string; typeGun: GUN_TYPE }) {
     return this.gunRepository
       .createQueryBuilder()
