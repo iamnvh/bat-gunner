@@ -1,57 +1,36 @@
-export enum ProfileStep {
-  RECOGNIZATION = 'recognization',
-  VERIFICATION = 'verification',
-  PROFILE = 'profile',
-  VERIFY = 'verify',
-  VERIFIED = 'verified',
+export const HOURS_SPEND_CLAIM = 6 * 60 * 60 * 1000;
+
+export const LIMIT_REFERRAL = 100;
+
+export const POINT_REWARD = 60;
+
+export enum CLAIM_TYPE {
+  CLAIM_FOR_ME = 'claim_for_me',
+  CLAIM_FOR_DIRECT_REF = 'claim_for_direct_ref',
+  CLAIM_FOR_IN_DIRECT_REF = 'claim_for_in_direct_ref',
+  CLAIM_FOR_MISSION = 'claim_for_mission',
+  CLAIM_FOR_GAME = 'claim_for_game',
 }
 
-export const ScreenName = {
-  YourLike: 'YourLike',
-  Chat: 'Chat',
-  Matched: 'Matched',
-  Profile: 'Profile',
-  Loved: 'Loved',
-  PicpieeCreated: 'PicpieeCreated',
-  PostDetail: 'PostDetail',
-  PostCommentDetail: 'PostCommentDetail',
-};
+export enum LEVEL_CLAIM {
+  LEVEL_ONE = 1,
+  LEVEL_TWO = 0.1,
+  LEVEL_THREE = 0.025,
+}
 
-export const QUEUE_PROCESSOR = {
-  ORAISWAP: {
-    NAME: 'oraiswap',
-    PROCESS: {
-      SEND_REWARD: 'send-reward',
-      SEND_REWARD_CHECK_IN: 'send-reward-check-in',
-    },
-  },
-  FILE: {
-    NAME: 'file',
-    PROCESS: {
-      COMPRESS: 'compress',
-      UPLOAD_IMAGES: 'upload-images',
-    },
-  },
-};
+export enum MISSION_STATUS {
+  FINISHED = 'finished',
+  NOT_STARTED = 'not_started',
+}
 
-export const FixedLanguageNames = [
-  'English',
-  'French',
-  'Spanish',
-  'German',
-  'Italian',
-  'Chinese',
-  'Japanese',
-  'Russian',
-  'Arabic',
-  'Portuguese',
-];
+export enum MISSION_TYPE {
+  SOCIAL = 'social',
+  TARGET = 'target',
+}
 
-export const FILE_CHECK_TYPE = {
-  NSFW: 'nsfw',
-  FACE_MATCH: 'face-match',
-};
-
-export const ERROR_TYPE = {
-  MAXIMUM_LIKED: 'maximumLiked',
-};
+export enum GUN_TYPE {
+  GUN_BLACK = 1,
+  GUN_RED = 2,
+  GUN_GREEN = 3,
+  GUN_BLUE = 4,
+}

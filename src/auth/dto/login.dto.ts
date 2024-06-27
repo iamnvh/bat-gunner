@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
-export class AuthDto {
+export class LoginDto {
   @ApiProperty()
-  @IsNumber()
-  telegramId: number;
+  @IsString()
+  telegramId: string;
 
   @ApiProperty()
   @IsString()

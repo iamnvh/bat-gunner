@@ -1,19 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
+import { IsString } from 'class-validator';
+import { UserEntity } from 'src/user/user.entity';
 
-export class AuthDto {
+export class RegisterDto extends UserEntity {
   @ApiProperty()
-  @IsNumber()
-  telegramId: number;
+  @IsString()
+  telegramId: string;
 
   @ApiProperty()
   @IsString()
   telegramUsername: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsUUID()
-  @Type(() => String)
-  referenceUserId: string;
+  @IsString()
+  referrerTelegramId: string;
 }

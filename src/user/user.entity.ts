@@ -2,36 +2,26 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
   UpdateDateColumn,
   Index,
+  Unique,
 } from 'typeorm';
 
 @Entity({ name: 'user' })
+@Unique('user_unique', ['telegramId', 'telegramUsername'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   @Index()
   id: string;
 
   @Column({ nullable: false })
-  telegramId: number;
+  telegramId: string;
 
   @Column({ nullable: false })
   telegramUsername: string;
 
-  @Column({ nullable: true })
-  @CreateDateColumn({ type: 'timestamp' })
-  timeEnd: Date;
-
-  @Column({ nullable: true })
-  @CreateDateColumn({ type: 'timestamp' })
-  timeStart: Date;
-
-  @Column({ nullable: false, default: 0 })
-  point: number;
-
-  @Column({ nullable: false, default: false })
-  statusClaim: boolean;
+  @Column({ nullable: false, default: 5 })
+  tickets: number;
 
   @UpdateDateColumn({
     type: 'timestamp',

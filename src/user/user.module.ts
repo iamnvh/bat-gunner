@@ -3,13 +3,12 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { IsExist } from '../utils/validators/is-exists.validator';
-import { IsNotExist } from '../utils/validators/is-not-exists.validator';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule],
   controllers: [UserController],
-  providers: [IsExist, IsNotExist, UserService],
+  providers: [UserService],
   exports: [UserService],
 })
 export class UserModule {}

@@ -8,6 +8,11 @@ import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { UserModule } from './user/user.module';
+import { ReferralModule } from './referral/referral.module';
+import { ClaimModule } from './claim/claim.module';
+import { MissionModule } from './mission/mission.module';
+import { GameModule } from './game/game.module';
+import { GunModule } from './gun/gun.module';
 
 @Module({
   imports: [
@@ -24,6 +29,11 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
+    ReferralModule,
+    ClaimModule,
+    MissionModule,
+    GameModule,
+    GunModule,
   ],
 })
 export class AppModule {}

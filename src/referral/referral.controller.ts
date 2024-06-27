@@ -1,37 +1,34 @@
 import {
   Controller,
   Get,
-  HttpStatus,
   HttpCode,
+  HttpStatus,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ResponseAPI } from '../utils/func-helper';
-import { IAuthorizedRequest } from '../utils/types/authorized-request.interface';
-import { Response } from 'express';
+import { ReferralService } from './referral.service';
 import { LocalAuthGuard } from 'src/auth/guards/local.guard';
+import { IAuthorizedRequest } from 'src/utils/types/authorized-request.interface';
+import { ResponseAPI } from 'src/utils/func-helper';
+import { Response } from 'express';
 
-@ApiTags('User')
+@ApiTags('Referral')
 @Controller({
-  path: 'user',
+  path: 'ref',
   version: '1',
 })
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class ReferralController {
+  constructor(private readonly referralService: ReferralService) {}
 
-  @Get('me')
+  @Get('friends')
   @ApiBearerAuth()
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   async profile(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
     try {
-      const data = await this.userService.getProfile({
-        telegramId: auth.user.telegramId,
-        telegramUsername: auth.user.telegramUsername,
-      });
+      const data = await this.referralService.friends(auth.user.id);
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });
