@@ -46,7 +46,7 @@ export class MissionService {
   async getMissionsByUserId(userId: string) {
     return this.missionRepository.find({
       where: { userId },
-      select: ['reward', 'status', 'title', 'type', 'updatedAt'],
+      select: ['id', 'reward', 'status', 'title', 'type', 'updatedAt'],
     });
   }
 
