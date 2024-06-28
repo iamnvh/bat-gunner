@@ -33,6 +33,9 @@ export class ClaimService {
     const latestClaim = await this.claimRepository
       .createQueryBuilder('claim')
       .where('claim.userId = :userId', { userId })
+      .andWhere('claim.typeClaim = "typeClaim', {
+        typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
+      })
       .orderBy('claim.updatedAt', 'ASC')
       .getOne();
 
