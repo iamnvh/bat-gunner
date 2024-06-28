@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { EntityCondition } from 'src/utils/types/entity-condition.type';
 import { RegisterDto } from 'src/auth/dto/register.dto';
+import { CLAIM_TYPE } from 'src/utils/constants';
 
 @Injectable()
 export class UserService {
@@ -29,6 +30,9 @@ export class UserService {
       .where('user.telegramId = :telegramId', { telegramId: params.telegramId })
       .andWhere('user.telegramUsername = :telegramUsername', {
         telegramUsername: params.telegramUsername,
+      })
+      .andWhere('claim.typeClaim = :typeClaim', {
+        typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
       })
       .select([
         'user.telegramId as "telegramId"',
