@@ -13,6 +13,7 @@ import { ClaimModule } from './claim/claim.module';
 import { MissionModule } from './mission/mission.module';
 import { GameModule } from './game/game.module';
 import { GunModule } from './gun/gun.module';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { GunModule } from './gun/gun.module';
     MissionModule,
     GameModule,
     GunModule,
+    TelegramModule,
   ],
 })
 export class AppModule {}

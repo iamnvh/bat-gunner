@@ -55,6 +55,8 @@ export class AuthService {
       this.missionService.syncMission(newUser.id),
       this.gunService.initGun(newUser.id),
     ]);
+
+    return newUser;
   }
 
   async login(loginDto: LoginDto) {
