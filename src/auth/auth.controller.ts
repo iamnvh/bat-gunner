@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -33,7 +32,7 @@ export class AuthController {
     }
   }
 
-  @Get('login')
+  @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto, @Res() response: Response) {
     try {
