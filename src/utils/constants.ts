@@ -34,3 +34,6 @@ export enum GUN_TYPE {
   GUN_GREEN = 3,
   GUN_BLUE = 4,
 }
+
+export const INTRODUCE =
+  "Now we're rolling out our Telegram mini app! Start farming points now, and who knows what cool stuff you'll snag with them soon! 🚀\n\nGot friends? Bring 'em in! The more, the merrier! 🌱\n\nRemember: Bat Gunner is where growth thrives and endless opportunities bloom! 🌼";

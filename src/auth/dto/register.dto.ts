@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { UserEntity } from 'src/user/user.entity';
 
-export class RegisterDto extends UserEntity {
+export class RegisterDto {
   @ApiProperty()
   @IsString()
   telegramId: string;
