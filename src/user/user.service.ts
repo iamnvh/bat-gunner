@@ -27,20 +27,22 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .leftJoin('claim', 'claim', 'claim.userId = user.id')
-      .where('user.telegramId = :telegramId', { telegramId: params.telegramId })
+      .where('user.telegramId = :telegramId', {
+        telegramId: params.telegramId,
+      })
       .andWhere('user.telegramUsername = :telegramUsername', {
         telegramUsername: params.telegramUsername,
-      })
-      .andWhere('claim.typeClaim = :typeClaim', {
-        typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
       })
       .select([
         'user.telegramId as "telegramId"',
         'user.telegramUsername as "telegramUsername"',
         'user.tickets as tickets',
         'SUM(claim.point) as "totalPoints"',
-        'MAX(claim.updatedAt) as "lastClaimed"',
+        `(SELECT MAX(c."updatedAt") 
+          FROM claim c 
+          WHERE c."userId" = user.id AND c."typeClaim" = :typeClaim) as "lastClaimed"`,
       ])
+      .setParameter('typeClaim', CLAIM_TYPE.CLAIM_FOR_ME)
       .groupBy('user.id')
       .getRawOne();
   }
