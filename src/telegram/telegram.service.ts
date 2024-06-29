@@ -25,7 +25,6 @@ export class TelegramService {
     }
 
     const info = message?.from;
-    console.log(info);
     const userOld = await this.userService.findOne({
       telegramId: info?.id.toString(),
     });
