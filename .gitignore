@@ -40,6 +40,7 @@ lerna-debug.log*
 /ormconfig.json
 test_eueno.ts
 upload
+/secrets
 
 /cupiee-firebase.json
 /cupiee-firebase-pro.json
