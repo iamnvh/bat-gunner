@@ -14,13 +14,17 @@ import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   dotenv.config();
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: [process.env.FRONTEND_DOMAIN as string, 'http://localhost:3000/'],
-    },
-  });
+  const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService);
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      configService.get('app.frontendDomain') as string,
+    ],
+    methods: ['GET', 'POST'],
+    credentials: true,
+  });
 
   app.enableShutdownHooks();
   app.setGlobalPrefix(configService.get('app.apiPrefix') as string, {
