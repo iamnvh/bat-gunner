@@ -14,12 +14,13 @@ import { MissionModule } from './mission/mission.module';
 import { GameModule } from './game/game.module';
 import { GunModule } from './gun/gun.module';
 import { TelegramModule } from './telegram/telegram.module';
+import botConfig from './config/bot.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, authConfig, appConfig],
+      load: [databaseConfig, authConfig, appConfig, botConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({

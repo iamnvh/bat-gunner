@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload) {
-    const { telegramId, telegramUsername } = payload;
-    return this.authService.validateUser(telegramId, telegramUsername);
+    const { telegramId } = payload;
+    return this.authService.validateUser(telegramId);
   }
 }

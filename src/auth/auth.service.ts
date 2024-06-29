@@ -25,9 +25,7 @@ export class AuthService {
   async register(dto: RegisterDto): Promise<any> {
     const [user, userReferrer] = await Promise.all([
       this.userService.findUser(dto?.telegramId),
-      this.userService.findOne({
-        telegramId: dto.referrerTelegramId,
-      }),
+      this.userService.findUserByTelegramId(dto?.referrerTelegramId),
     ]);
 
     if (user) {
@@ -41,7 +39,7 @@ export class AuthService {
       this.gunService.initGun(newUser.id),
     ];
 
-    if (userReferrer?.id) {
+    if (userReferrer) {
       promiseArr.push(
         this.referralService.create({
           referrerUserId: userReferrer?.id,
@@ -56,9 +54,9 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.userService.findOne({
-      telegramId: loginDto.telegramId,
-    });
+    const user = await this.userService.findUserByTelegramId(
+      loginDto?.telegramId,
+    );
 
     if (!user) {
       throw new UnauthorizedException(`user_not_found`);
@@ -72,11 +70,8 @@ export class AuthService {
     return { token };
   }
 
-  async validateUser(telegramId: string, telegramUsername: string) {
-    const user = await this.userService.findOne({
-      telegramId: telegramId,
-      telegramUsername: telegramUsername,
-    });
+  async validateUser(telegramId: string) {
+    const user = await this.userService.findOne({ telegramId });
 
     if (!user) {
       throw new UnauthorizedException();

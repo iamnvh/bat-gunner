@@ -25,42 +25,26 @@ export class TelegramService {
     }
 
     const info = message?.from;
-    const userOld = await this.userService.findOne({
-      telegramId: info?.id.toString(),
-    });
+    const userOld = await this.userService.findUserByTelegramId(
+      info?.id.toString(),
+    );
 
     if (userOld) {
       await this.showToolbarButton(ctx);
       return;
     }
 
-    const referralLink = message.text?.split(' ')[1];
+    const userNew = await this.authService.register({
+      telegramId: info?.id.toString(),
+      telegramUsername: info?.username,
+      firstName: info?.first_name,
+      lastName: info?.last_name,
+      languageCode: info?.language_code,
+      referrerTelegramId: message.text?.split(' ')[1],
+    });
 
-    if (referralLink) {
-      const userNew = await this.authService.register({
-        telegramId: info?.id.toString(),
-        telegramUsername: info?.last_name,
-        firstName: info?.first_name,
-        lastName: info?.last_name,
-        languageCode: info?.language_code,
-        referrerTelegramId: referralLink,
-      });
-
-      if (userNew) {
-        return this.showToolbarButton(ctx);
-      }
-    } else {
-      const userNew = await this.authService.register({
-        telegramId: info?.id.toString(),
-        telegramUsername: info?.last_name,
-        firstName: info?.first_name,
-        lastName: info?.last_name,
-        languageCode: info?.language_code,
-      });
-
-      if (userNew) {
-        return this.showToolbarButton(ctx);
-      }
+    if (userNew) {
+      return this.showToolbarButton(ctx);
     }
   }
 
@@ -68,7 +52,9 @@ export class TelegramService {
     const telegramId = ctx.from?.id;
     if (!telegramId) return;
 
-    const refLink = `https://t.me/BatGunner_Bot?start=${telegramId}`;
+    const refLink = `https://t.me/${this.configService.get(
+      'bot.botUsername',
+    )}?start=${telegramId}`;
     await ctx.reply(`Your referral link: ${refLink}`, {
       reply_markup: {
         inline_keyboard: [[{ text: 'Share Referral Link', url: refLink }]],

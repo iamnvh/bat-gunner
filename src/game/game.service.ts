@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { EntityCondition } from 'src/utils/types/entity-condition.type';
 import { GameEntity } from './game.entity';
 import { GameDto } from './dto/game.dto';
 import { UserService } from 'src/user/user.service';
@@ -23,16 +22,9 @@ export class GameService {
     private readonly gunService: GunService,
   ) {}
 
-  findOne(fields: EntityCondition<GameEntity>) {
-    return this.gameRepository.findOne({
-      where: fields,
-    });
-  }
-
   async update(params: GameDto) {
-    const user = await this.userService.findOne({
-      id: params.userId,
-    });
+    const { userId, reward } = params;
+    const user = await this.userService.findOne({ id: userId });
 
     if (!user) {
       throw new UnauthorizedException(`user_not_found`);
@@ -43,7 +35,7 @@ export class GameService {
     }
 
     const gunOfUser = await this.gunService.findOne({
-      userId: params.userId,
+      userId: userId,
     });
 
     if (!gunOfUser) {
@@ -53,7 +45,7 @@ export class GameService {
     const response = await this.gameRepository.save({
       userId: user.id,
       gunType: gunOfUser.gunType,
-      reward: params.reward,
+      reward: reward,
     });
 
     if (response) {
@@ -65,7 +57,7 @@ export class GameService {
         this.claimService.create({
           userId: user.id,
           typeClaim: CLAIM_TYPE.CLAIM_FOR_GAME,
-          point: gunOfUser.gunType * response.reward,
+          point: gunOfUser.gunType * reward,
         }),
       ]);
     }

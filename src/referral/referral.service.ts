@@ -3,7 +3,6 @@ import { ReferralEntity } from './referral.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LIMIT_REFERRAL } from 'src/utils/constants';
-import { EntityCondition } from 'src/utils/types/entity-condition.type';
 
 @Injectable()
 export class ReferralService {
@@ -11,12 +10,6 @@ export class ReferralService {
     @InjectRepository(ReferralEntity)
     private readonly referralRepository: Repository<ReferralEntity>,
   ) {}
-
-  findOne(fields: EntityCondition<ReferralEntity>) {
-    return this.referralRepository.findOne({
-      where: fields,
-    });
-  }
 
   async create(referral: ReferralEntity): Promise<ReferralEntity> {
     return this.referralRepository.save(referral);
