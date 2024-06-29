@@ -17,8 +17,8 @@ async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule, {
     httpsOptions: {
-      key: readFileSync('~/ssl/key.pem'),
-      cert: readFileSync('~/ssl/certificate.pem'),
+      key: readFileSync('./secrets/key.pem'),
+      cert: readFileSync('./secrets/cert.pem'),
     },
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
