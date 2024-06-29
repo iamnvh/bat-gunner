@@ -15,7 +15,9 @@ import * as dotenv from 'dotenv';
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule, {
-    cors: { origin: process.env.FRONTEND_DOMAIN },
+    cors: {
+      origin: [process.env.FRONTEND_DOMAIN as string, 'http://localhost:3000/'],
+    },
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService);
