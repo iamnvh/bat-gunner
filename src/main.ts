@@ -11,10 +11,16 @@ import validationOptions from './utils/validation-options';
 import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'express';
 import * as dotenv from 'dotenv';
+import { readFileSync } from 'fs';
 
 async function bootstrap() {
   dotenv.config();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions: {
+      key: readFileSync('key.pem'),
+      cert: readFileSync('cert.pem'),
+    },
+  });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService);
   app.enableCors({
