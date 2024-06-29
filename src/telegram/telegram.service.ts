@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { InjectBot } from 'nestjs-telegraf';
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from 'src/user/user.service';
@@ -10,6 +11,7 @@ export class TelegramService {
     @InjectBot() private readonly bot: Telegraf<Context>,
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly configService: ConfigService,
   ) {
     this.bot.start((ctx) => this.start(ctx));
     this.bot.action('genReferralLink', (ctx) => this.generateRefLink(ctx));
@@ -63,11 +65,17 @@ export class TelegramService {
   }
 
   private async showToolbarButton(ctx: Context) {
-    const webAppUrl = 'https://mini.cupiee.com/';
     await ctx.reply(INTRODUCE, {
       reply_markup: {
         inline_keyboard: [
-          [{ text: 'Launch App', web_app: { url: webAppUrl } }],
+          [
+            {
+              text: 'Launch App',
+              web_app: {
+                url: this.configService.getOrThrow('app.frontendDomain'),
+              },
+            },
+          ],
           [{ text: 'Get Referral Link', callback_data: 'genReferralLink' }],
         ],
       },
