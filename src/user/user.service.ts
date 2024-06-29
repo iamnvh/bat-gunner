@@ -19,6 +19,24 @@ export class UserService {
     });
   }
 
+  findUserByTelegramId(
+    telegramId: string | undefined,
+  ): Promise<UserEntity | undefined> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.telegramId = :telegramId', { telegramId })
+      .select([
+        'user.id as id',
+        'user.telegramId as "telegramId"',
+        'user.telegramUsername as "telegramUsername"',
+        'user.referrerTelegramId as "referrerTelegramId"',
+        'user.lastName as "lastName"',
+        'user.firstName as "firstName"',
+        'user.tickets as tickets',
+      ])
+      .getRawOne();
+  }
+
   create(user: RegisterDto): Promise<UserEntity> {
     return this.userRepository.save(user);
   }

@@ -14,7 +14,7 @@ export class GameCreateDto {
   @IsEnum(GUN_TYPE)
   gunType: GUN_TYPE;
 
-  @ApiProperty({ type: 'float', nullable: false })
+  @ApiProperty({ nullable: false })
   @IsNumber()
   @Type(() => Number)
   reward: number;
