@@ -24,22 +24,11 @@ export class AuthService {
 
   async register(dto: RegisterDto): Promise<any> {
     const [user, userReferrer] = await Promise.all([
-      this.userService.findUser(dto),
+      this.userService.findUser(dto?.telegramId),
       this.userService.findOne({
         telegramId: dto.referrerTelegramId,
       }),
     ]);
-
-    if (!userReferrer) {
-      throw new NotFoundException(`user_referral_not_found`);
-    }
-    // const countLimit = await this.referralService.checkLimitReferral(
-    //   userReferrer.id,
-    // );
-
-    // if (!countLimit) {
-    //   throw new NotFoundException(`user_limited_referral`);
-    // }
 
     if (user) {
       throw new NotFoundException(`user_already_exists`);
@@ -47,14 +36,21 @@ export class AuthService {
 
     const newUser = await this.userService.create(dto);
 
-    await Promise.all([
-      this.referralService.create({
-        referrerUserId: userReferrer.id,
-        referredUserId: newUser.id,
-      } as ReferralDto),
+    const promiseArr: any = [
       this.missionService.syncMission(newUser.id),
       this.gunService.initGun(newUser.id),
-    ]);
+    ];
+
+    if (userReferrer?.id) {
+      promiseArr.push(
+        this.referralService.create({
+          referrerUserId: userReferrer?.id,
+          referredUserId: newUser.id,
+        } as ReferralDto),
+      );
+    }
+
+    await Promise.all(promiseArr);
 
     return newUser;
   }
@@ -62,7 +58,6 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const user = await this.userService.findOne({
       telegramId: loginDto.telegramId,
-      telegramUsername: loginDto.telegramUsername,
     });
 
     if (!user) {
@@ -70,8 +65,8 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({
-      telegramId: loginDto.telegramId,
-      telegramUsername: loginDto.telegramUsername,
+      telegramId: user.telegramId,
+      firstName: user.firstName,
     });
 
     return { token };

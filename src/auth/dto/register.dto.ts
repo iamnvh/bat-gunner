@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty()
@@ -8,9 +8,25 @@ export class RegisterDto {
 
   @ApiProperty()
   @IsString()
-  telegramUsername: string;
+  @IsOptional()
+  telegramUsername?: string;
 
   @ApiProperty()
   @IsString()
-  referrerTelegramId: string;
+  @IsOptional()
+  referrerTelegramId?: string;
+
+  @ApiProperty()
+  @IsString()
+  firstName: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  lastName?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  languageCode?: string;
 }

@@ -8,8 +8,8 @@ export class LoginDto {
   @Type(() => String)
   telegramId: string;
 
-  @ApiProperty()
-  @IsString()
-  @Type(() => String)
-  telegramUsername: string;
+  // @ApiProperty()
+  // @IsString()
+  // @Type(() => String)
+  // telegramUsername: string;
 }

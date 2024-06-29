@@ -30,7 +30,6 @@ export class UserController {
     try {
       const data = await this.userService.getProfile({
         telegramId: auth.user.telegramId,
-        telegramUsername: auth.user.telegramUsername,
       });
       ResponseAPI.Success({ data, response });
     } catch (error) {

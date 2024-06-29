@@ -19,16 +19,15 @@ export class TelegramService {
 
   private async start(ctx: Context) {
     const message = ctx.message as Message.TextMessage;
-    const infoTelegram = ctx.from;
 
-    if (!infoTelegram?.username || !infoTelegram?.id || !message) {
-      console.error('Telegram user information is incomplete.');
+    if (!message || !message?.from) {
       return;
     }
 
+    const info = message?.from;
+    console.log(info);
     const userOld = await this.userService.findOne({
-      telegramId: infoTelegram.id.toString(),
-      telegramUsername: infoTelegram.username,
+      telegramId: info?.id.toString(),
     });
 
     if (userOld) {
@@ -36,19 +35,33 @@ export class TelegramService {
       return;
     }
 
-    const refLink = message.text?.split(' ')[1];
-    if (refLink) {
+    const referralLink = message.text?.split(' ')[1];
+
+    if (referralLink) {
       const userNew = await this.authService.register({
-        telegramId: infoTelegram.id.toString(),
-        telegramUsername: infoTelegram.username,
-        referrerTelegramId: refLink,
+        telegramId: info?.id.toString(),
+        telegramUsername: info?.last_name,
+        firstName: info?.first_name,
+        lastName: info?.last_name,
+        languageCode: info?.language_code,
+        referrerTelegramId: referralLink,
       });
 
       if (userNew) {
         return this.showToolbarButton(ctx);
       }
     } else {
-      await ctx.reply('You need to have a referral link!!!');
+      const userNew = await this.authService.register({
+        telegramId: info?.id.toString(),
+        telegramUsername: info?.last_name,
+        firstName: info?.first_name,
+        lastName: info?.last_name,
+        languageCode: info?.language_code,
+      });
+
+      if (userNew) {
+        return this.showToolbarButton(ctx);
+      }
     }
   }
 
