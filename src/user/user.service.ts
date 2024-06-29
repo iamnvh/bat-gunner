@@ -23,19 +23,19 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  getProfile(params: { telegramId: string; telegramUsername: string }) {
+  getProfile(params: { telegramId: string }) {
     return this.userRepository
       .createQueryBuilder('user')
       .leftJoin('claim', 'claim', 'claim.userId = user.id')
       .where('user.telegramId = :telegramId', {
         telegramId: params.telegramId,
       })
-      .andWhere('user.telegramUsername = :telegramUsername', {
-        telegramUsername: params.telegramUsername,
-      })
       .select([
         'user.telegramId as "telegramId"',
         'user.telegramUsername as "telegramUsername"',
+        'user.referrerTelegramId as "referrerTelegramId"',
+        'user.lastName as "lastName"',
+        'user.firstName as "firstName"',
         'user.tickets as tickets',
         'SUM(claim.point) as "totalPoints"',
         `(SELECT MAX(c."updatedAt") 
@@ -47,13 +47,10 @@ export class UserService {
       .getRawOne();
   }
 
-  async findUser(params: { telegramId?: string; telegramUsername?: string }) {
+  async findUser(telegramId?: string) {
     return this.userRepository
       .createQueryBuilder('user')
-      .where('user.telegramId = :telegramId', { telegramId: params.telegramId })
-      .orWhere('user.telegramUsername = :telegramUsername', {
-        telegramUsername: params.telegramUsername,
-      })
+      .where('user.telegramId = :telegramId', { telegramId })
       .getOne();
   }
 

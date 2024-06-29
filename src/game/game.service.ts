@@ -57,16 +57,17 @@ export class GameService {
     });
 
     if (response) {
-      await this.userService.handleMinusTicket({
-        userId: user?.id,
-        tickets: user?.tickets - 1,
-      });
-
-      await this.claimService.create({
-        userId: user.id,
-        typeClaim: CLAIM_TYPE.CLAIM_FOR_GAME,
-        point: gunOfUser.gunType * response.reward,
-      });
+      await Promise.all([
+        this.userService.handleMinusTicket({
+          userId: user?.id,
+          tickets: user?.tickets - 1,
+        }),
+        this.claimService.create({
+          userId: user.id,
+          typeClaim: CLAIM_TYPE.CLAIM_FOR_GAME,
+          point: gunOfUser.gunType * response.reward,
+        }),
+      ]);
     }
   }
 }
