@@ -30,7 +30,7 @@ export class TelegramService {
     );
 
     if (userOld) {
-      await this.showToolbarButton(ctx);
+      await this.showToolbarButton(ctx, userOld?.telegramId);
       return;
     }
 
@@ -44,7 +44,7 @@ export class TelegramService {
     });
 
     if (userNew) {
-      return this.showToolbarButton(ctx);
+      return this.showToolbarButton(ctx, info?.id.toString());
     }
   }
 
@@ -62,7 +62,10 @@ export class TelegramService {
     });
   }
 
-  private async showToolbarButton(ctx: Context) {
+  private async showToolbarButton(ctx: Context, telegramId: string) {
+    const url = `${this.configService.getOrThrow(
+      'app.frontendDomain',
+    )}?telegramId=${telegramId}`;
     await ctx.reply(INTRODUCE, {
       reply_markup: {
         inline_keyboard: [
@@ -70,7 +73,7 @@ export class TelegramService {
             {
               text: 'Launch App',
               web_app: {
-                url: this.configService.getOrThrow('app.frontendDomain'),
+                url: url,
               },
             },
           ],
