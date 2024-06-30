@@ -1,4 +1,4 @@
-export const HOURS_SPEND_CLAIM = 5 * 60 * 1000;
+export const HOURS_SPEND_CLAIM = 2 * 60 * 1000;
 
 export const LIMIT_REFERRAL = 100;
 
