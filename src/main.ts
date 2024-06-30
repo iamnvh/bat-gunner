@@ -22,7 +22,7 @@ async function bootstrap() {
     },
   });
   app.enableCors({
-    origin: ['https://mini-app.batgun.top'],
+    origin: 'https://mini-app.batgun.top',
     allowedHeaders: ['content-type'],
     preflightContinue: false,
     methods: ['GET', 'POST'],
