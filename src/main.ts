@@ -27,9 +27,13 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:8080',
     ],
-    allowedHeaders: ['content-type'],
-    preflightContinue: false,
-    methods: ['GET', 'POST'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+    ],
+    methods: ['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'],
     credentials: true,
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
