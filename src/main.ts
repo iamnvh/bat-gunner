@@ -21,18 +21,19 @@ async function bootstrap() {
       cert: readFileSync('./secrets/cert.pem'),
     },
   });
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  const configService = app.get(ConfigService);
   app.enableCors({
     origin: [
       'https://mini-app.batgun.top',
       'http://localhost:3000',
       'http://localhost:8080',
     ],
+    allowedHeaders: ['content-type'],
+    preflightContinue: false,
     methods: ['GET', 'POST'],
     credentials: true,
   });
-
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  const configService = app.get(ConfigService);
   app.enableShutdownHooks();
   app.setGlobalPrefix(configService.get('app.apiPrefix') as string, {
     exclude: ['/'],
