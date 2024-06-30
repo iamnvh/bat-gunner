@@ -24,7 +24,11 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService);
   app.enableCors({
-    origin: '*',
+    origin: [
+      'https://mini-app.batgun.top',
+      'http://localhost:3000',
+      'http://localhost:8080',
+    ],
     methods: ['GET', 'POST'],
     credentials: true,
   });
