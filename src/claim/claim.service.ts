@@ -36,7 +36,7 @@ export class ClaimService {
       .andWhere('claim.typeClaim = :typeClaim', {
         typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
       })
-      .orderBy('claim.updatedAt', 'ASC')
+      .orderBy('claim.updatedAt', 'DESC')
       .getOne();
 
     if (!latestClaim) {
