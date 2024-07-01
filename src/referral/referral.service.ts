@@ -3,6 +3,7 @@ import { ReferralEntity } from './referral.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LIMIT_REFERRAL } from 'src/utils/constants';
+import { PageDto } from 'src/utils/dto/page.dto';
 
 @Injectable()
 export class ReferralService {
@@ -23,15 +24,17 @@ export class ReferralService {
     return count < LIMIT_REFERRAL;
   }
 
-  async friends(userId: string) {
+  async friends(params: PageDto & { userId: string }) {
     const [friends, totalFriends] = await Promise.all([
       this.referralRepository
         .createQueryBuilder('ref')
         .leftJoin('user', 'user', 'user.id = ref.referredUserId')
         .leftJoin('claim', 'claim', 'claim.userId = user.id')
         .where('ref.referrerUserId = :referrerUserId', {
-          referrerUserId: userId,
+          referrerUserId: params.userId,
         })
+        .offset(params.offset)
+        .limit(params.limit)
         .select([
           'user.telegramId as "telegramId"',
           'SUM(claim.point) as "totalPoints"',
@@ -41,7 +44,7 @@ export class ReferralService {
       this.referralRepository
         .createQueryBuilder('ref')
         .where('ref.referrerUserId = :referrerUserId', {
-          referrerUserId: userId,
+          referrerUserId: params.userId,
         })
         .getCount(),
     ]);
