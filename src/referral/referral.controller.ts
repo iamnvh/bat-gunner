@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -13,6 +14,7 @@ import { LocalAuthGuard } from 'src/auth/guards/local.guard';
 import { IAuthorizedRequest } from 'src/utils/types/authorized-request.interface';
 import { ResponseAPI } from 'src/utils/func-helper';
 import { Response } from 'express';
+import { PageDto } from 'src/utils/dto/page.dto';
 
 @ApiTags('Referral')
 @Controller({
@@ -26,9 +28,17 @@ export class ReferralController {
   @ApiBearerAuth()
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async profile(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
+  async profile(
+    @Req() auth: IAuthorizedRequest,
+    @Query() { offset, limit }: PageDto,
+    @Res() response: Response,
+  ) {
     try {
-      const data = await this.referralService.friends(auth.user.id);
+      const data = await this.referralService.friends({
+        userId: auth.user.id,
+        offset,
+        limit,
+      });
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });
