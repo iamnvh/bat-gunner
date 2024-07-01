@@ -33,10 +33,10 @@ export class ReferralService {
           referrerUserId: userId,
         })
         .select([
-          'user.telegramUsername as "userName"',
+          'user.telegramId as "telegramId"',
           'SUM(claim.point) as "totalPoints"',
         ])
-        .groupBy('user.telegramUsername')
+        .groupBy('user.telegramId')
         .getRawMany(),
       this.referralRepository
         .createQueryBuilder('ref')
