@@ -6,6 +6,7 @@ import { MissionEntity } from './mission.entity';
 import { readFileSync } from 'fs';
 import { CLAIM_TYPE, MISSION_STATUS } from 'src/utils/constants';
 import { ClaimService } from 'src/claim/claim.service';
+import { PageDto } from 'src/utils/dto/page.dto';
 
 const bufferData = readFileSync(
   process.cwd() + '/src/mission/data/mission.json',
@@ -43,11 +44,21 @@ export class MissionService {
     await Promise.all(queries);
   }
 
-  async getMissionsByUserId(userId: string) {
-    return this.missionRepository.find({
-      where: { userId },
-      select: ['id', 'reward', 'status', 'title', 'type', 'updatedAt'],
-    });
+  async getMissionsByUserId(params: PageDto & { userId: string }) {
+    return this.missionRepository
+      .createQueryBuilder('mission')
+      .where('mission.id = :userId', { userId: params.userId })
+      .select([
+        'mission.id as id',
+        'mission.reward as reward',
+        'mission.status as status',
+        'mission.title as title',
+        'mission.type as type',
+        'mission.updatedAt as "updatedAt"',
+      ])
+      .offset(params.offset)
+      .limit(params.limit)
+      .getRawMany();
   }
 
   async update(params: { missionId: string; userId: string }) {
