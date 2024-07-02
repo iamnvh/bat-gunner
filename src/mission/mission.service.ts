@@ -47,7 +47,7 @@ export class MissionService {
   async getMissionsByUserId(params: PageDto & { userId: string }) {
     return this.missionRepository
       .createQueryBuilder('mission')
-      .where('mission.id = :userId', { userId: params.userId })
+      .where('mission.userId = :userId', { userId: params.userId })
       .select([
         'mission.id as id',
         'mission.reward as reward',
