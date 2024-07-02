@@ -7,14 +7,14 @@ export class PageDto {
   @Type(() => Number)
   @IsNumber()
   @Min(0)
-  @ApiProperty()
-  offset?: number;
+  @ApiProperty({ required: false })
+  offset?: number = 0;
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
   @Max(40)
-  @ApiProperty()
-  limit?: number;
+  @ApiProperty({ required: false })
+  limit?: number = 10;
 }

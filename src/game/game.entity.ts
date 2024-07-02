@@ -28,7 +28,7 @@ export class GameEntity {
     nullable: false,
     type: 'enum',
     enum: GUN_TYPE,
-    default: GUN_TYPE.GUN_BLACK,
+    default: GUN_TYPE.FREE,
   })
   gunType: GUN_TYPE;
 

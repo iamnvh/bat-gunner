@@ -1,0 +1,26 @@
+[
+  {
+    "title": "GUN BLACK",
+    "level": 1,
+    "price": 0,
+    "type": "free"
+  },
+  {
+    "title": "GUN YELLOW",
+    "level": 2,
+    "price": 0.5,
+    "type": "paid"
+  },
+  {
+    "title": "GUN BLUE",
+    "level": 3,
+    "price": 1,
+    "type": "paid"
+  },
+  {
+    "title": "GUN RED",
+    "level": 4,
+    "price": 2,
+    "type": "paid"
+  }
+]
