@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GUN_TYPE } from 'src/utils/constants';
 import { GunEntity } from './gun.entity';
 import { Repository } from 'typeorm';
 import { EntityCondition } from 'src/utils/types/entity-condition.type';
@@ -18,23 +17,15 @@ export class GunService {
     });
   }
 
-  async initGun(userId: string) {
-    return this.gunRepository.save({
-      userId: userId,
-      title: 'GUN BLACK',
-      gunType: 1,
-      price: 0,
-    });
-  }
-
-  async update(params: { userId: string; typeGun: GUN_TYPE }) {
+  findAll() {
     return this.gunRepository
-      .createQueryBuilder()
-      .update(GunEntity)
-      .update({
-        gunType: params.typeGun,
-      })
-      .where('id = :userId', { userId: params.userId })
-      .execute();
+      .createQueryBuilder('gun')
+      .select([
+        'gun.id as id',
+        'gun.title as title',
+        'gun.price as price',
+        'gun.type as type',
+      ])
+      .getRawMany();
   }
 }

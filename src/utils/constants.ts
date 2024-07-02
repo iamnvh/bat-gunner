@@ -29,10 +29,9 @@ export enum MISSION_TYPE {
 }
 
 export enum GUN_TYPE {
-  GUN_BLACK = 1,
-  GUN_RED = 2,
-  GUN_GREEN = 3,
-  GUN_BLUE = 4,
+  PAID = 'paid',
+  FREE = 'free',
+  GIFTED = 'gifted',
 }
 
 export const INTRODUCE =

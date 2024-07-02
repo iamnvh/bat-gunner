@@ -36,7 +36,7 @@ export class AuthService {
 
     const promiseArr: any = [
       this.missionService.syncMission(newUser.id),
-      this.gunService.initGun(newUser.id),
+      // this.gunService.initGun(newUser.id),
     ];
 
     if (userReferrer) {
