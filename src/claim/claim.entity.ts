@@ -1,5 +1,5 @@
 import { UserEntity } from 'src/user/user.entity';
-import { CLAIM_TYPE } from 'src/utils/constants';
+import { ClaimType } from 'src/utils/constants';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -27,8 +27,8 @@ export class ClaimEntity {
   @Column({
     nullable: false,
     type: 'enum',
-    enum: CLAIM_TYPE,
-    default: CLAIM_TYPE.CLAIM_FOR_ME,
+    enum: ClaimType,
+    default: ClaimType.CLAIM_FOR_ME,
   })
   typeClaim: string;
 

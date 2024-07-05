@@ -15,6 +15,7 @@ import { GameModule } from './game/game.module';
 import { GunModule } from './gun/gun.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { UserGunModule } from './user-gun/user-gun.module';
+import { UserMissionModule } from './user-mission/user-mission.module';
 import botConfig from './config/bot.config';
 
 @Module({
@@ -39,6 +40,7 @@ import botConfig from './config/bot.config';
     GunModule,
     TelegramModule,
     UserGunModule,
+    UserMissionModule,
   ],
 })
 export class AppModule {}

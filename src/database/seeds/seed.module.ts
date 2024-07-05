@@ -6,10 +6,12 @@ import databaseConfig from 'src/config/database.config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { TypeOrmConfigService } from '../typeorm-config.service';
 import { GunSeedModule } from './gun/gun-seed.module';
+import { MissionSeedModule } from './mission/mission-seed.module';
 
 @Module({
   imports: [
     GunSeedModule,
+    MissionSeedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig, appConfig],

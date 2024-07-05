@@ -9,8 +9,7 @@ import { ReferralService } from 'src/referral/referral.service';
 import { ReferralDto } from 'src/referral/dto/referral.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { MissionService } from 'src/mission/mission.service';
-import { GunService } from 'src/gun/gun.service';
+import { UserMissionService } from 'src/user-mission/user-mission.service';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +17,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly referralService: ReferralService,
     private readonly jwtService: JwtService,
-    private readonly missionService: MissionService,
-    private readonly gunService: GunService,
+    private readonly userMissionService: UserMissionService,
   ) {}
 
   async register(dto: RegisterDto): Promise<any> {
@@ -35,7 +33,8 @@ export class AuthService {
     const newUser = await this.userService.create(dto);
 
     const promiseArr: any = [
-      this.missionService.syncMission(newUser.id),
+      this.userMissionService.syncMission(newUser.id),
+      // this.missionService.syncMission(newUser.id),
       // this.gunService.initGun(newUser.id),
     ];
 
@@ -76,7 +75,6 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-
     return user;
   }
 }

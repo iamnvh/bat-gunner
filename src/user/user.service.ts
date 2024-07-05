@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { EntityCondition } from 'src/utils/types/entity-condition.type';
 import { RegisterDto } from 'src/auth/dto/register.dto';
-import { CLAIM_TYPE } from 'src/utils/constants';
+import { ClaimType } from 'src/utils/constants';
 
 @Injectable()
 export class UserService {
@@ -60,7 +60,7 @@ export class UserService {
           FROM claim c 
           WHERE c."userId" = user.id AND c."typeClaim" = :typeClaim) as "lastClaimed"`,
       ])
-      .setParameter('typeClaim', CLAIM_TYPE.CLAIM_FOR_ME)
+      .setParameter('typeClaim', ClaimType.CLAIM_FOR_ME)
       .groupBy('user.id')
       .getRawOne();
   }

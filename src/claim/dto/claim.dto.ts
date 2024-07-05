@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { CLAIM_TYPE } from 'src/utils/constants';
+import { ClaimType } from 'src/utils/constants';
 
 export class ClaimDto {
   @ApiProperty({
     nullable: false,
-    enum: CLAIM_TYPE,
+    enum: ClaimType,
     type: 'enum',
   })
   @IsString()
-  @IsEnum(CLAIM_TYPE)
-  typeClaim: CLAIM_TYPE;
+  @IsEnum(ClaimType)
+  typeClaim: ClaimType;
 
   @ApiProperty({ nullable: false })
   @IsString()

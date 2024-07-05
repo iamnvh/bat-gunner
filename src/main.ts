@@ -16,10 +16,10 @@ import { readFileSync } from 'fs';
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule, {
-    httpsOptions: {
-      key: readFileSync('./secrets/key.pem'),
-      cert: readFileSync('./secrets/cert.pem'),
-    },
+    // httpsOptions: {
+    //   key: readFileSync('./secrets/key.pem'),
+    //   cert: readFileSync('./secrets/cert.pem'),
+    // },
   });
   app.enableCors({
     origin: [

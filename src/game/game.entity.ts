@@ -1,5 +1,5 @@
 import { UserEntity } from 'src/user/user.entity';
-import { GUN_TYPE } from 'src/utils/constants';
+import { GunType } from 'src/utils/constants';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -27,10 +27,10 @@ export class GameEntity {
   @Column({
     nullable: false,
     type: 'enum',
-    enum: GUN_TYPE,
-    default: GUN_TYPE.FREE,
+    enum: GunType,
+    default: GunType.FREE,
   })
-  gunType: GUN_TYPE;
+  gunType: GunType;
 
   @UpdateDateColumn({
     type: 'timestamp',

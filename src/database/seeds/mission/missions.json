@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Follow Twitter",
+    "reward": 80,
+    "type": "social",
+    "link": ""
+  },
+  {
+    "title": "Follow Telegram",
+    "reward": 100,
+    "type": "social",
+    "link": ""
+  },
+  {
+    "title": "Mission One",
+    "reward": 100,
+    "type": "daily",
+    "link": ""
+  },
+  {
+    "title": "Mission Two",
+    "reward": 100,
+    "type": "daily",
+    "link": ""
+  },
+  {
+    "title": "Mission Three",
+    "reward": 100,
+    "type": "daily",
+    "link": ""
+  }
+]

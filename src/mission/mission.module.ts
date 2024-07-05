@@ -1,12 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MissionEntity } from './mission.entity';
 import { MissionService } from './mission.service';
 import { MissionController } from './mission.controller';
-import { ClaimModule } from 'src/claim/claim.module';
+import { UserMissionModule } from 'src/user-mission/user-mission.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MissionEntity]), ClaimModule],
+  imports: [
+    TypeOrmModule.forFeature([MissionEntity]),
+    forwardRef(() => UserMissionModule),
+  ],
   controllers: [MissionController],
   providers: [MissionService],
   exports: [MissionService],

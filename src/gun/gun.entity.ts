@@ -1,4 +1,4 @@
-import { GUN_TYPE } from 'src/utils/constants';
+import { GunType } from 'src/utils/constants';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,12 +17,18 @@ export class GunEntity {
   @Column({ nullable: false })
   title: string;
 
+  @Column({ nullable: false })
+  image: string;
+
   @Column({
     nullable: false,
     type: 'enum',
-    enum: GUN_TYPE,
+    enum: GunType,
   })
-  type: GUN_TYPE;
+  type: GunType;
+
+  @Column({ nullable: false })
+  level: number;
 
   @UpdateDateColumn({
     type: 'timestamp',
