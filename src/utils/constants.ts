@@ -4,7 +4,7 @@ export const LIMIT_REFERRAL = 100;
 
 export const POINT_REWARD = 60;
 
-export enum CLAIM_TYPE {
+export enum ClaimType {
   CLAIM_FOR_ME = 'claim_for_me',
   CLAIM_FOR_DIRECT_REF = 'claim_for_direct_ref',
   CLAIM_FOR_IN_DIRECT_REF = 'claim_for_in_direct_ref',
@@ -12,23 +12,24 @@ export enum CLAIM_TYPE {
   CLAIM_FOR_GAME = 'claim_for_game',
 }
 
-export enum LEVEL_CLAIM {
+export enum LevelClaimType {
   LEVEL_ONE = 1,
   LEVEL_TWO = 0.1,
   LEVEL_THREE = 0.025,
 }
 
-export enum MISSION_STATUS {
-  FINISHED = 'finished',
-  NOT_STARTED = 'not_started',
+export enum MissionStatusType {
+  FINISHED = 1,
+  NOT_STARTED = 0,
 }
 
-export enum MISSION_TYPE {
+export enum MissionType {
   SOCIAL = 'social',
   TARGET = 'target',
+  DAILY_ONE = 'daily',
 }
 
-export enum GUN_TYPE {
+export enum GunType {
   PAID = 'paid',
   FREE = 'free',
   GIFTED = 'gifted',
@@ -36,3 +37,8 @@ export enum GUN_TYPE {
 
 export const INTRODUCE =
   "Now we're rolling out our Telegram mini app! Start farming points now, and who knows what cool stuff you'll snag with them soon! 🚀\n\nGot friends? Bring 'em in! The more, the merrier! 🌱\n\nRemember: Bat Gunner is where growth thrives and endless opportunities bloom! 🌼";
+
+export enum GunStatusType {
+  DISABLE = 0,
+  ENABLE = 1,
+}

@@ -8,9 +8,9 @@ import { Repository } from 'typeorm';
 import { ClaimEntity } from './claim.entity';
 import { UserService } from 'src/user/user.service';
 import {
-  CLAIM_TYPE,
+  ClaimType,
   HOURS_SPEND_CLAIM,
-  LEVEL_CLAIM,
+  LevelClaimType,
   POINT_REWARD,
 } from 'src/utils/constants';
 import { ReferralService } from 'src/referral/referral.service';
@@ -34,7 +34,7 @@ export class ClaimService {
       .createQueryBuilder('claim')
       .where('claim.userId = :userId', { userId })
       .andWhere('claim.typeClaim = :typeClaim', {
-        typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
+        typeClaim: ClaimType.CLAIM_FOR_ME,
       })
       .orderBy('claim.updatedAt', 'DESC')
       .getOne();
@@ -69,18 +69,18 @@ export class ClaimService {
 
     claimPromises.push(
       this.create({
-        typeClaim: CLAIM_TYPE.CLAIM_FOR_ME,
+        typeClaim: ClaimType.CLAIM_FOR_ME,
         userId: user.id,
-        point: POINT_REWARD * LEVEL_CLAIM.LEVEL_ONE,
+        point: POINT_REWARD * LevelClaimType.LEVEL_ONE,
       }),
     );
 
     if (usersReferral?.userRedirect) {
       claimPromises.push(
         this.create({
-          typeClaim: CLAIM_TYPE.CLAIM_FOR_DIRECT_REF,
+          typeClaim: ClaimType.CLAIM_FOR_DIRECT_REF,
           userId: usersReferral.userRedirect,
-          point: POINT_REWARD * LEVEL_CLAIM.LEVEL_TWO,
+          point: POINT_REWARD * LevelClaimType.LEVEL_TWO,
         }),
       );
     }
@@ -88,9 +88,9 @@ export class ClaimService {
     if (usersReferral?.userInRedirect) {
       claimPromises.push(
         this.create({
-          typeClaim: CLAIM_TYPE.CLAIM_FOR_IN_DIRECT_REF,
+          typeClaim: ClaimType.CLAIM_FOR_IN_DIRECT_REF,
           userId: usersReferral.userInRedirect,
-          point: POINT_REWARD * LEVEL_CLAIM.LEVEL_THREE,
+          point: POINT_REWARD * LevelClaimType.LEVEL_THREE,
         }),
       );
     }

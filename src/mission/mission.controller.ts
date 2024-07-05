@@ -5,19 +5,13 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Query,
-  Req,
   Res,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { LocalAuthGuard } from 'src/auth/guards/local.guard';
-import { IAuthorizedRequest } from 'src/utils/types/authorized-request.interface';
+import { ApiTags } from '@nestjs/swagger';
 import { ResponseAPI } from 'src/utils/func-helper';
 import { Response } from 'express';
 import { MissionService } from './mission.service';
 import { MissionDto } from './dto/mission.dto';
-import { PageDto } from 'src/utils/dto/page.dto';
 
 @ApiTags('Mission')
 @Controller({
@@ -27,41 +21,25 @@ import { PageDto } from 'src/utils/dto/page.dto';
 export class MissionController {
   constructor(private readonly missionService: MissionService) {}
 
-  @Get('')
-  @ApiBearerAuth()
-  @UseGuards(LocalAuthGuard)
+  @Get('admin/missions')
   @HttpCode(HttpStatus.OK)
-  async getMission(
-    @Req() auth: IAuthorizedRequest,
-    @Query() { offset, limit }: PageDto,
-    @Res() response: Response,
-  ) {
+  async findAllMission(@Res() response: Response) {
     try {
-      const data = await this.missionService.getMissionsByUserId({
-        userId: auth.user.id,
-        offset,
-        limit,
-      });
+      const data = await this.missionService.find();
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });
     }
   }
 
-  @Post('claim')
-  @ApiBearerAuth()
-  @UseGuards(LocalAuthGuard)
+  @Post('admin/update')
   @HttpCode(HttpStatus.OK)
-  async claimMission(
-    @Req() auth: IAuthorizedRequest,
+  async updateMission(
     @Body() missionDto: MissionDto,
     @Res() response: Response,
   ) {
     try {
-      const data = await this.missionService.update({
-        missionId: missionDto.missionId,
-        userId: auth.user.id,
-      });
+      const data = await this.missionService.update(missionDto);
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });

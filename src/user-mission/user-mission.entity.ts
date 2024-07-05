@@ -1,6 +1,6 @@
-import { GunEntity } from 'src/gun/gun.entity';
+import { MissionEntity } from 'src/mission/mission.entity';
 import { UserEntity } from 'src/user/user.entity';
-import { GunStatusType } from 'src/utils/constants';
+import { MissionStatusType } from 'src/utils/constants';
 import {
   Column,
   Entity,
@@ -11,9 +11,9 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity({ name: 'user_gun' })
-@Unique('user_gun_unique', ['userId', 'gunId'])
-export class UserGunEntity {
+@Entity({ name: 'user_mission' })
+@Unique('user_mission_unique', ['userId', 'missionId'])
+export class UserMissionEntity {
   @PrimaryGeneratedColumn('uuid')
   @Index()
   id: string;
@@ -25,18 +25,17 @@ export class UserGunEntity {
   @Column({ type: 'string' })
   userId: string;
 
-  @ManyToOne(() => GunEntity)
-  @JoinColumn({ name: 'gunId' })
-  gun: GunEntity;
+  @ManyToOne(() => MissionEntity)
+  @JoinColumn({ name: 'missionId' })
+  mission: MissionEntity;
 
   @Column({ type: 'string' })
-  gunId: string;
+  missionId: string;
 
   @Column({
     nullable: true,
     type: 'boolean',
-    default: GunStatusType.DISABLE,
+    default: MissionStatusType.NOT_STARTED,
   })
-  @Index()
-  status: GunStatusType;
+  status: MissionStatusType;
 }
