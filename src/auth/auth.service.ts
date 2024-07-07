@@ -10,6 +10,7 @@ import { ReferralDto } from 'src/referral/dto/referral.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserMissionService } from 'src/user-mission/user-mission.service';
+import { UserGunService } from 'src/user-gun/user-gun.service';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     private readonly referralService: ReferralService,
     private readonly jwtService: JwtService,
     private readonly userMissionService: UserMissionService,
+    private readonly userGunService: UserGunService,
   ) {}
 
   async register(dto: RegisterDto): Promise<any> {
@@ -34,8 +36,7 @@ export class AuthService {
 
     const promiseArr: any = [
       this.userMissionService.syncMission(newUser.id),
-      // this.missionService.syncMission(newUser.id),
-      // this.gunService.initGun(newUser.id),
+      this.userGunService.initGun(newUser.id),
     ];
 
     if (userReferrer) {

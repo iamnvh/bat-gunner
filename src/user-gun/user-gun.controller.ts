@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Post,
   Query,
   Req,
   Res,
@@ -60,6 +61,26 @@ export class UserGunController {
   async getGun(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
     try {
       const data = await this.userGunService.getGun(auth.user.id);
+      ResponseAPI.Success({ data, response });
+    } catch (error) {
+      ResponseAPI.Fail({ message: error.message, response });
+    }
+  }
+
+  @Post('buy')
+  @ApiBearerAuth()
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async buyGun(
+    @Req() auth: IAuthorizedRequest,
+    @Query('gunId') gunId: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const data = await this.userGunService.buyGunById({
+        userId: auth.user.id,
+        gunId: gunId,
+      });
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });

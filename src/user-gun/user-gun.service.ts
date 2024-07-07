@@ -11,7 +11,7 @@ import { UserGunEntity } from './user-gun.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { GunEntity } from 'src/gun/gun.entity';
 import { UserService } from 'src/user/user.service';
-import { GunStatusType } from 'src/utils/constants';
+import { GunStatusType, GunType } from 'src/utils/constants';
 import { GunService } from 'src/gun/gun.service';
 
 @Injectable()
@@ -40,6 +40,22 @@ export class UserGunService {
 
   save(userId: string, item: GunEntity) {
     return this.userGunRepository.update({ user: { id: userId } }, item);
+  }
+
+  async initGun(userId: string) {
+    const gunFree = await this.gunService.findOne({
+      type: GunType.FREE,
+    });
+
+    if (!gunFree) {
+      throw new BadRequestException(`not_found_gun_free`);
+    }
+
+    return this.create({
+      userId: userId,
+      gunId: gunFree?.id,
+      status: GunStatusType.ENABLE,
+    } as UserGunEntity);
   }
 
   async findMarket(userId: string) {
@@ -129,5 +145,35 @@ export class UserGunService {
       .where('user_gun."userId" = :userId', { userId: params.userId })
       .andWhere('user_gun."gunId" = :gunId', { gunId: params.gunId })
       .execute();
+  }
+
+  async buyGunById(params: {
+    userId: string;
+    gunId: string;
+    status?: GunStatusType;
+  }) {
+    const [user, gun] = await Promise.all([
+      this.userService.findOne({
+        id: params.userId,
+      }),
+      this.findOne({
+        where: {
+          userId: params.userId,
+          gunId: params.gunId,
+        },
+      }),
+    ]);
+
+    if (gun || !user) {
+      throw new BadRequestException(`gun_already_exist_or_not_found_user`);
+    }
+
+    await this.create({
+      userId: params.userId,
+      gunId: params.gunId,
+      status: params?.status,
+    } as UserGunEntity);
+
+    return;
   }
 }
