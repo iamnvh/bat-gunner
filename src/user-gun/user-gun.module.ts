@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UserGunService } from './user-gun.service';
 import { UserGunController } from './user-gun.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,11 +7,7 @@ import { UserModule } from 'src/user/user.module';
 import { GunModule } from 'src/gun/gun.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserGunEntity]),
-    UserModule,
-    forwardRef(() => GunModule),
-  ],
+  imports: [TypeOrmModule.forFeature([UserGunEntity]), UserModule, GunModule],
   controllers: [UserGunController],
   providers: [UserGunService],
   exports: [UserGunService],
