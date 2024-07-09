@@ -42,13 +42,16 @@ export enum GunStatusType {
   ENABLE = 1,
 }
 
+export enum BoostStatusType {
+  DISABLE = 0,
+  ENABLE = 1,
+}
+
 export enum BoostLevelType {
-  LEVEL_ZERO = 1,
-  LEVEL_ONE = 2,
-  LEVEL_TWO = 4,
-  LEVEL_THREE = 8,
-  LEVEL_FOUR = 16,
-  LEVEL_FIVE = 32,
-  LEVEL_SIX = 64,
-  LEVEL_SEVEN = 128,
+  LEVEL_ZERO = 0,
+  LEVEL_ONE = 1,
+  LEVEL_TWO = 2,
+  LEVEL_THREE = 3,
+  LEVEL_FOUR = 4,
+  LEVEL_FIVE = 5,
 }

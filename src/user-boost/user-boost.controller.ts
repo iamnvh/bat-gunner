@@ -31,7 +31,7 @@ export class UserBoostController {
   @HttpCode(HttpStatus.OK)
   async getBoost(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
     try {
-      const data = await this.userBoostService.getBoostById(auth.user.id);
+      const data = await this.userBoostService.getBoostsOwner(auth.user.id);
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });

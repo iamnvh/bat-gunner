@@ -1,5 +1,6 @@
 import { BoostEntity } from 'src/boost/boost.entity';
 import { UserEntity } from 'src/user/user.entity';
+import { BoostStatusType } from 'src/utils/constants';
 import {
   Column,
   Entity,
@@ -31,6 +32,14 @@ export class UserBoostEntity {
 
   @Column({ type: 'string' })
   boostId: string;
+
+  @Column({
+    nullable: true,
+    type: 'boolean',
+    default: BoostStatusType.DISABLE,
+  })
+  @Index()
+  status: BoostStatusType;
 
   @UpdateDateColumn({
     type: 'timestamp',
