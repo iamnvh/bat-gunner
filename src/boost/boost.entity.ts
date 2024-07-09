@@ -1,4 +1,4 @@
-import { GunType } from 'src/utils/constants';
+import { BoostLevelType } from 'src/utils/constants';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,32 +6,22 @@ import {
   Column,
 } from 'typeorm';
 
-@Entity({ name: 'gun' })
-export class GunEntity {
+@Entity({ name: 'boost' })
+export class BoostEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ type: 'float', nullable: false })
-  price: number;
 
   @Column({ nullable: false })
   title: string;
 
   @Column({ nullable: false })
-  image: string;
-
-  @Column({
-    nullable: false,
-    type: 'enum',
-    enum: GunType,
-  })
-  type: GunType;
+  cost: number;
 
   @Column({ nullable: false })
-  level: number;
+  rate: number;
 
-  @Column({ nullable: false, default: 0 })
-  ticket: number;
+  @Column({ nullable: true, default: 0 })
+  level: BoostLevelType;
 
   @UpdateDateColumn({
     type: 'timestamp',

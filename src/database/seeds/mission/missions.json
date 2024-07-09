@@ -12,20 +12,26 @@
     "link": ""
   },
   {
-    "title": "Mission One",
-    "reward": 100,
+    "title": "Like Daily",
+    "ticket": 1,
     "type": "daily",
     "link": ""
   },
   {
-    "title": "Mission Two",
-    "reward": 100,
+    "title": "Retweet Daily",
+    "ticket": 1,
     "type": "daily",
     "link": ""
   },
   {
-    "title": "Mission Three",
-    "reward": 100,
+    "title": "Retweet Daily",
+    "ticket": 1,
+    "type": "daily",
+    "link": ""
+  },
+  {
+    "title": "Retweet Daily",
+    "ticket": 1,
     "type": "daily",
     "link": ""
   }

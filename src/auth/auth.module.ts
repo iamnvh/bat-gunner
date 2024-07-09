@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserMissionModule } from 'src/user-mission/user-mission.module';
 import { UserGunModule } from 'src/user-gun/user-gun.module';
+import { UserBoostModule } from 'src/user-boost/user-boost.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UserGunModule } from 'src/user-gun/user-gun.module';
     ReferralModule,
     UserMissionModule,
     UserGunModule,
+    UserBoostModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

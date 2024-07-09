@@ -27,6 +27,7 @@ export class MissionSeedService {
         newMission.reward = element.reward;
         newMission.title = element.title;
         newMission.type = element.type;
+        newMission.ticket = element.ticket;
 
         await this.repository.save(newMission);
       }

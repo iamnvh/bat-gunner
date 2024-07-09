@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -15,6 +16,7 @@ import { LocalAuthGuard } from 'src/auth/guards/local.guard';
 import { IAuthorizedRequest } from 'src/utils/types/authorized-request.interface';
 import { Response } from 'express';
 import { ResponseAPI } from 'src/utils/func-helper';
+import { UserGunCreateDto } from './dto/user-gun-create.dto';
 
 @ApiTags('User Gun')
 @Controller({ path: 'user-gun', version: '1' })
@@ -73,13 +75,16 @@ export class UserGunController {
   @HttpCode(HttpStatus.OK)
   async buyGun(
     @Req() auth: IAuthorizedRequest,
-    @Query('gunId') gunId: string,
+    @Body() dtoBuyGun: UserGunCreateDto,
     @Res() response: Response,
   ) {
     try {
       const data = await this.userGunService.buyGunById({
         userId: auth.user.id,
-        gunId: gunId,
+        hash: dtoBuyGun.hash,
+        limit: dtoBuyGun.limit,
+        gunId: dtoBuyGun.gunId,
+        lt: dtoBuyGun.lt,
       });
       ResponseAPI.Success({ data, response });
     } catch (error) {

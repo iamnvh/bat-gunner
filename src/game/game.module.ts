@@ -5,14 +5,14 @@ import { GameService } from './game.service';
 import { GameController } from './game.controller';
 import { UserModule } from 'src/user/user.module';
 import { ClaimModule } from 'src/claim/claim.module';
-import { GunModule } from 'src/gun/gun.module';
+import { UserGunModule } from 'src/user-gun/user-gun.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([GameEntity]),
     UserModule,
     ClaimModule,
-    GunModule,
+    UserGunModule,
   ],
   controllers: [GameController],
   providers: [GameService],

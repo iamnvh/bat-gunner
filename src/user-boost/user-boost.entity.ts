@@ -1,6 +1,5 @@
-import { MissionEntity } from 'src/mission/mission.entity';
+import { BoostEntity } from 'src/boost/boost.entity';
 import { UserEntity } from 'src/user/user.entity';
-import { MissionStatusType } from 'src/utils/constants';
 import {
   Column,
   Entity,
@@ -12,9 +11,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'user_mission' })
-@Unique('user_mission_unique', ['userId', 'missionId'])
-export class UserMissionEntity {
+@Entity({ name: 'user_boost' })
+@Unique('user_boost_unique', ['userId', 'boostId'])
+export class UserBoostEntity {
   @PrimaryGeneratedColumn('uuid')
   @Index()
   id: string;
@@ -26,19 +25,12 @@ export class UserMissionEntity {
   @Column({ type: 'string' })
   userId: string;
 
-  @ManyToOne(() => MissionEntity)
-  @JoinColumn({ name: 'missionId' })
-  mission: MissionEntity;
+  @ManyToOne(() => BoostEntity)
+  @JoinColumn({ name: 'boostId' })
+  boost: BoostEntity;
 
   @Column({ type: 'string' })
-  missionId: string;
-
-  @Column({
-    nullable: true,
-    type: 'boolean',
-    default: MissionStatusType.NOT_STARTED,
-  })
-  status: MissionStatusType;
+  boostId: string;
 
   @UpdateDateColumn({
     type: 'timestamp',

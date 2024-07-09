@@ -9,6 +9,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'user_gun' })
@@ -39,4 +40,11 @@ export class UserGunEntity {
   })
   @Index()
   status: GunStatusType;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP()',
+    onUpdate: 'CURRENT_TIMESTAMP()',
+  })
+  updatedAt: Date;
 }

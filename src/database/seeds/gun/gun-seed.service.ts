@@ -27,6 +27,7 @@ export class GunSeedService {
         newGun.title = element.title;
         newGun.level = element.level;
         newGun.image = element.image;
+        newGun.ticket = element.ticket;
 
         await this.repository.save(newGun);
       }

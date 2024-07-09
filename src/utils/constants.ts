@@ -2,14 +2,13 @@ export const HOURS_SPEND_CLAIM = 2 * 60 * 1000;
 
 export const LIMIT_REFERRAL = 100;
 
-export const POINT_REWARD = 60;
-
 export enum ClaimType {
   CLAIM_FOR_ME = 'claim_for_me',
   CLAIM_FOR_DIRECT_REF = 'claim_for_direct_ref',
   CLAIM_FOR_IN_DIRECT_REF = 'claim_for_in_direct_ref',
   CLAIM_FOR_MISSION = 'claim_for_mission',
   CLAIM_FOR_GAME = 'claim_for_game',
+  CLAIM_FOR_BOOST = 'claim_for_boost',
 }
 
 export enum LevelClaimType {
@@ -41,4 +40,15 @@ export const INTRODUCE =
 export enum GunStatusType {
   DISABLE = 0,
   ENABLE = 1,
+}
+
+export enum BoostLevelType {
+  LEVEL_ZERO = 1,
+  LEVEL_ONE = 2,
+  LEVEL_TWO = 4,
+  LEVEL_THREE = 8,
+  LEVEL_FOUR = 16,
+  LEVEL_FIVE = 32,
+  LEVEL_SIX = 64,
+  LEVEL_SEVEN = 128,
 }

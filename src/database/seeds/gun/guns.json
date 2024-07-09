@@ -1,30 +1,66 @@
 [
   {
-    "title": "GUN BLACK",
+    "title": "GUN LEVEL 0",
     "level": 1,
     "price": 0,
     "type": "free",
-    "image": "https://image.gpg"
+    "image": "https://iili.io/dfIM8nn.png",
+    "ticket": 1
   },
   {
-    "title": "GUN YELLOW",
+    "title": "GUN LEVEL 1",
     "level": 2,
-    "price": 0.5,
+    "price": 0.1,
     "type": "paid",
-    "image": "https://image.gpg"
+    "image": "https://iili.io/dfIh9Sf.png",
+    "ticket": 2
   },
   {
-    "title": "GUN BLUE",
-    "level": 3,
-    "price": 1,
-    "type": "paid",
-    "image": "https://image.gpg"
-  },
-  {
-    "title": "GUN RED",
+    "title": "GUN LEVEL 2",
     "level": 4,
-    "price": 2,
+    "price": 0.2,
     "type": "paid",
-    "image": "https://image.gpg"
+    "image": "https://iili.io/dfIh5V1.png",
+    "ticket": 4
+  },
+  {
+    "title": "GUN LEVEL 3",
+    "level": 8,
+    "price": 0.4,
+    "type": "paid",
+    "image": "https://iili.io/dfIjcL7.png",
+    "ticket": 8
+  },
+  {
+    "title": "GUN LEVEL 4",
+    "level": 16,
+    "price": 0.8,
+    "type": "paid",
+    "image": "https://iili.io/dfIjUYJ.png",
+    "ticket": 16
+  },
+  {
+    "title": "GUN LEVEL 5",
+    "level": 32,
+    "price": 1.6,
+    "type": "paid",
+    "image": "https://iili.io/dfIjmvf.png",
+    "ticket": 32
+  },
+  {
+    "title": "GUN LEVEL 6",
+    "level": 64,
+    "price": 3.2,
+    "type": "paid",
+    "image": "https://iili.io/dfIw2C7.png",
+    "ticket": 64
+  },
+  {
+    "title": "GUN LEVEL 7",
+    "level": 128,
+    "price": 6.4,
+    "type": "paid",
+    "image": "https://iili.io/dfIwY8J.png",
+    "ticket": 128
   }
 ]
