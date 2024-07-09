@@ -44,6 +44,7 @@ export class UserBoostService {
     return this.userBoostRepository.save({
       userId: userId,
       boostId: boostInit.id,
+      status: BoostStatusType.ENABLE,
     });
   }
 
