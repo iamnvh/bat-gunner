@@ -7,6 +7,7 @@ import { MissionService } from 'src/mission/mission.service';
 import { ClaimType, MissionStatusType } from 'src/utils/constants';
 import { PageDto } from 'src/utils/dto/page.dto';
 import { ClaimService } from 'src/claim/claim.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class UserMissionService {
@@ -15,6 +16,7 @@ export class UserMissionService {
     private readonly userMissionRepository: Repository<UserMissionEntity>,
     private readonly missionService: MissionService,
     private readonly claimService: ClaimService,
+    private readonly userService: UserService,
   ) {}
 
   findOne(fields: FindOneOptions<UserMissionEntity>) {
@@ -60,6 +62,7 @@ export class UserMissionService {
         'mission.reward as reward',
         'mission.link as link',
         'mission.type as type',
+        'mission.ticket as ticket',
         'user-mission.status as status',
       ])
       .offset(params.offset)
@@ -86,11 +89,20 @@ export class UserMissionService {
         throw new BadGatewayException('not_found_mission');
       }
 
-      await this.claimService.create({
-        typeClaim: ClaimType.CLAIM_FOR_MISSION,
-        userId: args.userId,
-        point: mission.reward,
-      });
+      if (mission.reward > 0) {
+        await this.claimService.create({
+          typeClaim: ClaimType.CLAIM_FOR_MISSION,
+          userId: args.userId,
+          point: mission.reward,
+        });
+      }
+
+      if (mission.ticket > 0) {
+        await this.userService.handleTicket({
+          userId: args.userId,
+          tickets: mission.ticket,
+        });
+      }
     }
   }
 

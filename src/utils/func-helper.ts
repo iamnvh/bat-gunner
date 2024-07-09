@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
+import axios from 'axios';
 
 const StatusCode = {
   SUCCESS: 1,
@@ -51,4 +52,35 @@ export const formatNotificationPayload = (obj) => {
     }
   }
   return obj;
+};
+
+export const checkDate = (date1: Date, date2: Date) => {
+  return date1.toDateString() === date2.toDateString();
+};
+
+export const getTransactions = async (params: {
+  address: string;
+  hash: string;
+  limit: number;
+  method: string;
+  headers?: any;
+}) => {
+  try {
+    const config = {
+      method: params.method,
+      maxBodyLength: Infinity,
+      url: 'https://toncenter.com/api/v2/getTransactions',
+      headers: params.headers || {},
+      params: {
+        address: params.address,
+        hash: params.hash,
+        limit: params.limit,
+      },
+    };
+
+    const response = await axios.request(config);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
 };

@@ -11,10 +11,10 @@ import {
   ClaimType,
   HOURS_SPEND_CLAIM,
   LevelClaimType,
-  POINT_REWARD,
 } from 'src/utils/constants';
 import { ReferralService } from 'src/referral/referral.service';
 import { ClaimDto } from './dto/claim.dto';
+import { UserBoostService } from 'src/user-boost/user-boost.service';
 
 @Injectable()
 export class ClaimService {
@@ -23,6 +23,7 @@ export class ClaimService {
     private readonly claimRepository: Repository<ClaimEntity>,
     private readonly userService: UserService,
     private readonly referralService: ReferralService,
+    private readonly userBoostService: UserBoostService,
   ) {}
 
   async create(claim: ClaimDto): Promise<ClaimEntity> {
@@ -50,12 +51,13 @@ export class ClaimService {
   }
 
   async claim(userId: string) {
-    const [user, usersReferral] = await Promise.all([
+    const [user, usersReferral, boost] = await Promise.all([
       this.userService.findOne({ id: userId }),
       this.referralService.getUserReferrers(userId),
+      this.userBoostService.getBoostById(userId),
     ]);
 
-    if (!user) {
+    if (!user || !boost) {
       throw new UnauthorizedException();
     }
 
@@ -66,12 +68,13 @@ export class ClaimService {
     }
 
     const claimPromises: Promise<any>[] = [];
+    const pointReward = boost?.rate;
 
     claimPromises.push(
       this.create({
         typeClaim: ClaimType.CLAIM_FOR_ME,
         userId: user.id,
-        point: POINT_REWARD * LevelClaimType.LEVEL_ONE,
+        point: pointReward * LevelClaimType.LEVEL_ONE,
       }),
     );
 
@@ -80,7 +83,7 @@ export class ClaimService {
         this.create({
           typeClaim: ClaimType.CLAIM_FOR_DIRECT_REF,
           userId: usersReferral.userRedirect,
-          point: POINT_REWARD * LevelClaimType.LEVEL_TWO,
+          point: pointReward * LevelClaimType.LEVEL_TWO,
         }),
       );
     }
@@ -90,7 +93,7 @@ export class ClaimService {
         this.create({
           typeClaim: ClaimType.CLAIM_FOR_IN_DIRECT_REF,
           userId: usersReferral.userInRedirect,
-          point: POINT_REWARD * LevelClaimType.LEVEL_THREE,
+          point: pointReward * LevelClaimType.LEVEL_THREE,
         }),
       );
     }

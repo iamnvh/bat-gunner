@@ -14,8 +14,11 @@ export class MissionEntity {
   @Column({ nullable: false })
   title: string;
 
-  @Column({ type: 'float', nullable: false })
+  @Column({ type: 'float', nullable: false, default: 0 })
   reward: number;
+
+  @Column({ nullable: false, default: 0 })
+  ticket: number;
 
   @Column({ nullable: false })
   link: string;

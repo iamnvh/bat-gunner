@@ -7,11 +7,13 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { TypeOrmConfigService } from '../typeorm-config.service';
 import { GunSeedModule } from './gun/gun-seed.module';
 import { MissionSeedModule } from './mission/mission-seed.module';
+import { BoostSeedModule } from './boost/boost-seed.module';
 
 @Module({
   imports: [
     GunSeedModule,
     MissionSeedModule,
+    BoostSeedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig, appConfig],

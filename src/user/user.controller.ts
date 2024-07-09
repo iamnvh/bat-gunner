@@ -6,6 +6,7 @@ import {
   Req,
   Res,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -29,8 +30,21 @@ export class UserController {
   async profile(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
     try {
       const data = await this.userService.getProfile({
-        telegramId: auth.user.telegramId,
+        userId: auth.user.id,
       });
+      ResponseAPI.Success({ data, response });
+    } catch (error) {
+      ResponseAPI.Fail({ message: error.message, response });
+    }
+  }
+
+  @Post('daily')
+  @ApiBearerAuth()
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async checkIn(@Req() auth: IAuthorizedRequest, @Res() response: Response) {
+    try {
+      const data = await this.userService.checkInDaily(auth.user.id);
       ResponseAPI.Success({ data, response });
     } catch (error) {
       ResponseAPI.Fail({ message: error.message, response });

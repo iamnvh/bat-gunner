@@ -38,6 +38,18 @@ export class UserEntity {
   @IsOptional()
   languageCode?: string;
 
+  @Column({ nullable: true, type: 'float' })
+  tonBalance: number;
+
+  @Column({ nullable: true })
+  walletAddress: string;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP()',
+  })
+  lastCheckIn: Date;
+
   @Column({ nullable: true })
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP()' })
   createdAt: Date;

@@ -13,12 +13,15 @@ import { GunEntity } from 'src/gun/gun.entity';
 import { UserService } from 'src/user/user.service';
 import { GunStatusType, GunType } from 'src/utils/constants';
 import { GunService } from 'src/gun/gun.service';
+import { UserGunCreateDto } from './dto/user-gun-create.dto';
+import { getTransactions } from 'src/utils/func-helper';
 
 @Injectable()
 export class UserGunService {
   constructor(
     @InjectRepository(UserGunEntity)
     private readonly userGunRepository: Repository<UserGunEntity>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @Inject(forwardRef(() => GunService))
     private readonly gunService: GunService,
@@ -147,11 +150,11 @@ export class UserGunService {
       .execute();
   }
 
-  async buyGunById(params: {
-    userId: string;
-    gunId: string;
-    status?: GunStatusType;
-  }) {
+  async buyGunById(
+    params: UserGunCreateDto & {
+      userId: string;
+    },
+  ) {
     const [user, gun] = await Promise.all([
       this.userService.findOne({
         id: params.userId,
@@ -167,11 +170,41 @@ export class UserGunService {
     if (gun || !user) {
       throw new BadRequestException(`gun_already_exist_or_not_found_user`);
     }
+    const [transaction, newGun] = await Promise.all([
+      getTransactions({
+        address: user?.walletAddress,
+        hash: params.hash,
+        limit: params.limit,
+        method: 'get',
+      }),
+      this.gunService.findOne({
+        id: params.gunId,
+      }),
+    ]);
+
+    if (!transaction || !newGun) {
+      throw new BadRequestException(
+        `not_found_transaction_or_not_found_new_gun`,
+      );
+    }
+
+    const valueTransfer =
+      transaction?.data?.result[0]?.out_msgs[0]?.value / 1000000000;
+
+    const valueGunRequire = newGun?.price;
+
+    if (!valueTransfer) {
+      throw new BadRequestException(`not_found_value_of_transaction`);
+    }
+
+    if (valueTransfer < valueGunRequire) {
+      throw new BadRequestException(`not_enough_money_for_transaction`);
+    }
 
     await this.create({
       userId: params.userId,
       gunId: params.gunId,
-      status: params?.status,
+      status: GunStatusType.ENABLE,
     } as UserGunEntity);
 
     return;
