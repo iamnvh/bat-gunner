@@ -9,7 +9,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserBoostEntity } from './user-boost.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { BoostService } from 'src/boost/boost.service';
-import { BoostLevelType, ClaimType } from 'src/utils/constants';
+import {
+  BoostLevelType,
+  BoostStatusType,
+  ClaimType,
+} from 'src/utils/constants';
 import { UserService } from 'src/user/user.service';
 import { ClaimService } from 'src/claim/claim.service';
 
@@ -58,6 +62,37 @@ export class UserBoostService {
       .getRawOne();
   }
 
+  async getBoostsOwner(userId: string) {
+    const user = await this.userService.findOne({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const [boostIsOwner, boosts] = await Promise.all([
+      this.userBoostRepository.find({
+        where: {
+          userId: userId,
+        },
+      }),
+      this.boostService.find(),
+    ]);
+
+    const gunsWithOwnership = boosts.map((boost) => {
+      const isOwned = boostIsOwner.some(
+        (ownerBoost) => ownerBoost.boostId === boost.id,
+      );
+      return {
+        ...boost,
+        isDone: isOwned,
+      };
+    });
+
+    return gunsWithOwnership;
+  }
+
   async updateBoost(args: { userId: string; boostId: string }) {
     const [user, boost, newBoostUpgrade] = await Promise.all([
       this.userService.getProfile({
@@ -83,12 +118,11 @@ export class UserBoostService {
     }
 
     await Promise.all([
-      this.userBoostRepository
-        .createQueryBuilder('user_boost')
-        .update(UserBoostEntity)
-        .set({ boostId: newBoostUpgrade.id })
-        .where('user_boost."userId" = :userId', { userId: args.userId })
-        .execute(),
+      this.userBoostRepository.save({
+        userId: args.userId,
+        boostId: newBoostUpgrade.id,
+        status: BoostStatusType.ENABLE,
+      }),
       this.claimService.create({
         typeClaim: ClaimType.CLAIM_FOR_BOOST,
         userId: args.userId,
