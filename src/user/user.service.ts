@@ -13,6 +13,7 @@ import { RegisterDto } from 'src/auth/dto/register.dto';
 import { ClaimType } from 'src/utils/constants';
 import { UserGunService } from 'src/user-gun/user-gun.service';
 import { checkDate } from 'src/utils/func-helper';
+import { UserUpdateDto } from './dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -49,6 +50,14 @@ export class UserService {
 
   create(user: RegisterDto): Promise<UserEntity> {
     return this.userRepository.save(user);
+  }
+
+  async update(params: UserUpdateDto & { userId: string }) {
+    await this.userRepository.update(
+      { id: params.userId },
+      { walletAddress: params.walletAddress },
+    );
+    return;
   }
 
   getProfile(params: { userId: string }) {

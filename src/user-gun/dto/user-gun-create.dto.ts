@@ -11,10 +11,6 @@ export class UserGunCreateDto {
   hash: string;
 
   @ApiProperty({ nullable: false })
-  @IsString()
-  lt: string;
-
-  @ApiProperty({ nullable: false })
   @IsNumber()
-  limit: number;
+  lt: number;
 }

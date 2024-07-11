@@ -18,6 +18,7 @@ import { UserGunModule } from './user-gun/user-gun.module';
 import { UserMissionModule } from './user-mission/user-mission.module';
 import { BoostModule } from './boost/boost.module';
 import { UserBoostModule } from './user-boost/user-boost.module';
+import { TonModule } from './ton/ton.module';
 import botConfig from './config/bot.config';
 
 @Module({
@@ -45,6 +46,7 @@ import botConfig from './config/bot.config';
     UserMissionModule,
     BoostModule,
     UserBoostModule,
+    TonModule,
   ],
 })
 export class AppModule {}
