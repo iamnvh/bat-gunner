@@ -82,7 +82,6 @@ export class UserGunController {
       const data = await this.userGunService.buyGunById({
         userId: auth.user.id,
         hash: dtoBuyGun.hash,
-        limit: dtoBuyGun.limit,
         gunId: dtoBuyGun.gunId,
         lt: dtoBuyGun.lt,
       });

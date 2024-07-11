@@ -14,7 +14,7 @@ import { UserService } from 'src/user/user.service';
 import { GunStatusType, GunType } from 'src/utils/constants';
 import { GunService } from 'src/gun/gun.service';
 import { UserGunCreateDto } from './dto/user-gun-create.dto';
-import { getTransactions } from 'src/utils/func-helper';
+import { TonService } from 'src/ton/ton.service';
 
 @Injectable()
 export class UserGunService {
@@ -25,6 +25,7 @@ export class UserGunService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => GunService))
     private readonly gunService: GunService,
+    private readonly tonService: TonService,
   ) {}
 
   findOne(fields: FindOneOptions<UserGunEntity>) {
@@ -171,11 +172,10 @@ export class UserGunService {
       throw new BadRequestException(`gun_already_exist_or_not_found_user`);
     }
     const [transaction, newGun] = await Promise.all([
-      getTransactions({
-        address: user?.walletAddress,
+      this.tonService.getTransaction({
+        walletAddress: user.walletAddress,
+        lt: params.lt,
         hash: params.hash,
-        limit: params.limit,
-        method: 'get',
       }),
       this.gunService.findOne({
         id: params.gunId,
@@ -188,11 +188,13 @@ export class UserGunService {
       );
     }
 
-    const valueTransfer =
-      transaction?.data?.result[0]?.out_msgs[0]?.value / 1000000000;
-
+    const valueTransfer = transaction?.value / 1000000000;
+    const messageTransfer = transaction?.message;
     const valueGunRequire = newGun?.price;
 
+    if (messageTransfer != user.walletAddress) {
+      throw new BadRequestException(`wallet_address_not_valid`);
+    }
     if (!valueTransfer) {
       throw new BadRequestException(`not_found_value_of_transaction`);
     }
