@@ -10,7 +10,7 @@
   {
     "title": "GUN LEVEL 1",
     "level": 2,
-    "price": 0.1,
+    "price": 0.01,
     "type": "paid",
     "image": "https://iili.io/dfIh9Sf.png",
     "ticket": 2
@@ -18,7 +18,7 @@
   {
     "title": "GUN LEVEL 2",
     "level": 4,
-    "price": 0.2,
+    "price": 0.02,
     "type": "paid",
     "image": "https://iili.io/dfIh5V1.png",
     "ticket": 4
@@ -26,7 +26,7 @@
   {
     "title": "GUN LEVEL 3",
     "level": 8,
-    "price": 0.4,
+    "price": 0.04,
     "type": "paid",
     "image": "https://iili.io/dfIjcL7.png",
     "ticket": 8
@@ -34,7 +34,7 @@
   {
     "title": "GUN LEVEL 4",
     "level": 16,
-    "price": 0.8,
+    "price": 0.08,
     "type": "paid",
     "image": "https://iili.io/dfIjUYJ.png",
     "ticket": 16
@@ -42,7 +42,7 @@
   {
     "title": "GUN LEVEL 5",
     "level": 32,
-    "price": 1.6,
+    "price": 0.16,
     "type": "paid",
     "image": "https://iili.io/dfIjmvf.png",
     "ticket": 32
@@ -50,7 +50,7 @@
   {
     "title": "GUN LEVEL 6",
     "level": 64,
-    "price": 3.2,
+    "price": 0.32,
     "type": "paid",
     "image": "https://iili.io/dfIw2C7.png",
     "ticket": 64
@@ -58,7 +58,7 @@
   {
     "title": "GUN LEVEL 7",
     "level": 128,
-    "price": 6.4,
+    "price": 0.64,
     "type": "paid",
     "image": "https://iili.io/dfIwY8J.png",
     "ticket": 128
