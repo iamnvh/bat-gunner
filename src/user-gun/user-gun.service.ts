@@ -192,8 +192,8 @@ export class UserGunService {
     const messageTransfer = transaction?.message;
     const valueGunRequire = newGun?.price;
 
-    if (messageTransfer != user.walletAddress) {
-      throw new BadRequestException(`wallet_address_not_valid`);
+    if (messageTransfer != user.telegramId) {
+      throw new BadRequestException(`telegram_id_not_valid`);
     }
     if (!valueTransfer) {
       throw new BadRequestException(`not_found_value_of_transaction`);
