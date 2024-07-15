@@ -6,7 +6,7 @@ export class TonService {
   async getTransaction(hash: string) {
     try {
       const transaction = await getTransaction(hash);
-      return transaction.data.out_msgs;
+      return transaction.data.out_msgs[0];
     } catch (error) {
       throw new BadGatewayException(`${error}`);
     }
