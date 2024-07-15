@@ -1,33 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import TonWeb from 'tonweb';
+import { BadGatewayException, Injectable } from '@nestjs/common';
+import { getTransaction } from 'src/utils/func-helper';
 
 @Injectable()
 export class TonService {
-  private tonweb: TonWeb;
-
-  constructor() {
-    this.tonweb = new TonWeb();
-  }
-
-  async getTransaction(params: {
-    walletAddress: string;
-    lt: number;
-    hash: string;
-  }) {
-    const transaction = await this.tonweb.getTransactions(
-      params.walletAddress,
-      1,
-      params.lt,
-      params.hash,
-    );
-
-    const messages = transaction[0].out_msgs;
-    const minCreatedLtMessage = messages.reduce((min, current) => {
-      return parseInt(current.created_lt) < parseInt(min.created_lt)
-        ? current
-        : min;
-    }, messages[0]);
-
-    return minCreatedLtMessage;
+  async getTransaction(hash: string) {
+    try {
+      const transaction = await getTransaction(hash);
+      return transaction.data.out_msgs;
+    } catch (error) {
+      throw new BadGatewayException(`${error}`);
+    }
   }
 }

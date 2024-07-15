@@ -31,7 +31,7 @@ export class ClaimService {
   }
 
   async isClaimAvailable(userId: string): Promise<boolean> {
-    const latestClaim = await this.claimRepository
+    const latestClaimed = await this.claimRepository
       .createQueryBuilder('claim')
       .where('claim.userId = :userId', { userId })
       .andWhere('claim.typeClaim = :typeClaim', {
@@ -40,12 +40,12 @@ export class ClaimService {
       .orderBy('claim.updatedAt', 'DESC')
       .getOne();
 
-    if (!latestClaim) {
+    if (!latestClaimed) {
       return true;
     }
 
     const now = new Date().getTime();
-    const lastUpdated = latestClaim.updatedAt.getTime();
+    const lastUpdated = latestClaimed.updatedAt.getTime();
 
     return now - lastUpdated > HOURS_SPEND_CLAIM;
   }

@@ -60,6 +60,8 @@ export class UserBoostService {
         'boost.rate as rate',
         'boost.level as level',
       ])
+      .orderBy('boost.level', 'DESC')
+      .limit(1)
       .getRawOne();
   }
 

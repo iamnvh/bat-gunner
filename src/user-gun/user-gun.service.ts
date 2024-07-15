@@ -11,10 +11,11 @@ import { UserGunEntity } from './user-gun.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { GunEntity } from 'src/gun/gun.entity';
 import { UserService } from 'src/user/user.service';
-import { GunStatusType, GunType } from 'src/utils/constants';
+import { GunStatusType, GunType, LevelTonBonus } from 'src/utils/constants';
 import { GunService } from 'src/gun/gun.service';
 import { UserGunCreateDto } from './dto/user-gun-create.dto';
 import { TonService } from 'src/ton/ton.service';
+import { ReferralService } from 'src/referral/referral.service';
 
 @Injectable()
 export class UserGunService {
@@ -26,6 +27,7 @@ export class UserGunService {
     @Inject(forwardRef(() => GunService))
     private readonly gunService: GunService,
     private readonly tonService: TonService,
+    private readonly referralService: ReferralService,
   ) {}
 
   findOne(fields: FindOneOptions<UserGunEntity>) {
@@ -156,27 +158,18 @@ export class UserGunService {
       userId: string;
     },
   ) {
-    const [user, gun] = await Promise.all([
+    const [user, usersReferral] = await Promise.all([
       this.userService.findOne({
         id: params.userId,
       }),
-      this.findOne({
-        where: {
-          userId: params.userId,
-          gunId: params.gunId,
-        },
-      }),
+      this.referralService.getUserReferrers(params.userId),
     ]);
 
-    if (gun || !user) {
+    if (!user) {
       throw new BadRequestException(`gun_already_exist_or_not_found_user`);
     }
     const [transaction, newGun] = await Promise.all([
-      this.tonService.getTransaction({
-        walletAddress: user.walletAddress,
-        lt: params.lt,
-        hash: params.hash,
-      }),
+      this.tonService.getTransaction(params.hash),
       this.gunService.findOne({
         id: params.gunId,
       }),
@@ -189,7 +182,7 @@ export class UserGunService {
     }
 
     const valueTransfer = transaction?.value / 1000000000;
-    const messageTransfer = transaction?.message;
+    const messageTransfer = transaction?.decoded_body?.text;
     const valueGunRequire = newGun?.price;
 
     if (messageTransfer != user.telegramId) {
@@ -203,12 +196,32 @@ export class UserGunService {
       throw new BadRequestException(`not_enough_money_for_transaction`);
     }
 
+    await this.disableGuns(params.userId);
     await this.create({
       userId: params.userId,
       gunId: params.gunId,
       status: GunStatusType.ENABLE,
     } as UserGunEntity);
 
+    const arrAddTon: Promise<any>[] = [];
+    if (usersReferral?.userRedirect) {
+      arrAddTon.push(
+        this.userService.addTonToBalance({
+          userId: params.userId,
+          tonValue: valueTransfer * LevelTonBonus.LEVEL_ONE,
+        }),
+      );
+    }
+
+    if (usersReferral?.userInRedirect) {
+      arrAddTon.push(
+        this.userService.addTonToBalance({
+          userId: params.userId,
+          tonValue: valueTransfer * LevelTonBonus.LEVEL_TWO,
+        }),
+      );
+    }
+    await Promise.all(arrAddTon);
     return;
   }
 }

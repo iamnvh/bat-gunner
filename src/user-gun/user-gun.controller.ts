@@ -83,7 +83,6 @@ export class UserGunController {
         userId: auth.user.id,
         hash: dtoBuyGun.hash,
         gunId: dtoBuyGun.gunId,
-        lt: dtoBuyGun.lt,
       });
       ResponseAPI.Success({ data, response });
     } catch (error) {
