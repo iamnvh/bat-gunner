@@ -55,3 +55,8 @@ export enum BoostLevelType {
   LEVEL_FOUR = 4,
   LEVEL_FIVE = 5,
 }
+
+export enum LevelTonBonus {
+  LEVEL_ONE = 0.1,
+  LEVEL_TWO = 0.05,
+}

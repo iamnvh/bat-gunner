@@ -6,6 +6,7 @@ import { UserGunEntity } from './user-gun.entity';
 import { UserModule } from 'src/user/user.module';
 import { GunModule } from 'src/gun/gun.module';
 import { TonModule } from 'src/ton/ton.module';
+import { ReferralModule } from 'src/referral/referral.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TonModule } from 'src/ton/ton.module';
     GunModule,
     forwardRef(() => UserModule),
     TonModule,
+    ReferralModule,
   ],
   controllers: [UserGunController],
   providers: [UserGunService],

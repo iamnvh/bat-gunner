@@ -129,4 +129,19 @@ export class UserService {
       tickets: gun?.ticket,
     });
   }
+
+  async addTonToBalance(params: { userId: string; tonValue: number }) {
+    const user = await this.getProfile({ userId: params.userId });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return this.userRepository
+      .createQueryBuilder('user')
+      .update(UserEntity)
+      .set({ tonBalance: user.tonBalance + params.tonValue })
+      .where('user.id = :userId', { userId: params.userId })
+      .execute();
+  }
 }

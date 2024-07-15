@@ -25,7 +25,7 @@ import { ResponseAPI } from 'src/utils/func-helper';
 export class UserBoostController {
   constructor(private readonly userBoostService: UserBoostService) {}
 
-  @Get('boost')
+  @Get('boosts')
   @ApiBearerAuth()
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
