@@ -25,6 +25,22 @@ import { ResponseAPI } from 'src/utils/func-helper';
 export class UserBoostController {
   constructor(private readonly userBoostService: UserBoostService) {}
 
+  @Get()
+  @ApiBearerAuth()
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getBoostAvailable(
+    @Req() auth: IAuthorizedRequest,
+    @Res() response: Response,
+  ) {
+    try {
+      const data = await this.userBoostService.getBoostById(auth.user.id);
+      ResponseAPI.Success({ data, response });
+    } catch (error) {
+      ResponseAPI.Fail({ message: error.message, response });
+    }
+  }
+
   @Get('boosts')
   @ApiBearerAuth()
   @UseGuards(LocalAuthGuard)
